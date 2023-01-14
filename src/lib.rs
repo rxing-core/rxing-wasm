@@ -1,7 +1,8 @@
 use std::collections::HashMap;
+use std::rc::Rc;
 
-use rxing::Writer;
 use rxing::{self, ResultPoint};
+use rxing::{Reader, Writer};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -115,14 +116,13 @@ impl From<rxing::BarcodeFormat> for BarcodeFormat {
 
 #[wasm_bindgen]
 pub struct BarcodeResult {
-     text: String,
-     raw_bytes: Vec<u8>,
-     num_bits: usize,
-     result_points: Vec<f32>,
-     format: BarcodeFormat,
+    text: String,
+    raw_bytes: Vec<u8>,
+    num_bits: usize,
+    result_points: Vec<f32>,
+    format: BarcodeFormat,
     // resultMetadata: HashMap<String, String>,
-     timestamp: isize,
-     
+    timestamp: isize,
 }
 
 #[wasm_bindgen]
@@ -144,7 +144,7 @@ impl BarcodeResult {
         self.num_bits
     }
 
-    pub fn raw_bytes(&self) ->Vec<u8> {
+    pub fn raw_bytes(&self) -> Vec<u8> {
         self.raw_bytes.to_vec()
     }
 
@@ -164,10 +164,7 @@ impl From<rxing::RXingResult> for BarcodeResult {
             result_points: value
                 .getRXingResultPoints()
                 .iter()
-                .map(|rxp| 
-                 [    rxp.getX(),
-                     rxp.getY(),
-                ])
+                .map(|rxp| [rxp.getX(), rxp.getY()])
                 .flatten()
                 .collect(),
             format: value.getBarcodeFormat().to_owned().into(),
@@ -204,12 +201,46 @@ pub fn decode_barcode(
     height: u32,
     try_harder: Option<bool>,
 ) -> Result<BarcodeResult, String> {
-    let mut hints : rxing::DecodingHintDictionary = HashMap::new();
+    let mut hints: rxing::DecodingHintDictionary = HashMap::new();
     if let Some(true) = try_harder {
-        hints.insert(rxing::DecodeHintType::TRY_HARDER, rxing::DecodeHintValue::TryHarder(true));
+        hints.insert(
+            rxing::DecodeHintType::TRY_HARDER,
+            rxing::DecodeHintValue::TryHarder(true),
+        );
     }
     let Ok(result) = rxing::helpers::detect_in_luma_with_hints(data, width, height, None, &mut hints) else {
         return Err("not found".to_owned());
     };
+    Ok(result.into())
+}
+
+#[wasm_bindgen]
+/// Decode a barcode from an array of rgba data.
+/// Pixel data is in the form of:
+///     Each pixel is one u32, [r,g,b].
+pub fn decode_barcode_rgb(
+    data: Vec<u32>,
+    width: u32,
+    height: u32,
+    try_harder: Option<bool>,
+) -> Result<BarcodeResult, String> {
+    let mut hints: rxing::DecodingHintDictionary = HashMap::new();
+    if let Some(true) = try_harder {
+        hints.insert(
+            rxing::DecodeHintType::TRY_HARDER,
+            rxing::DecodeHintValue::TryHarder(true),
+        );
+    }
+    let mut multi_format_reader = rxing::MultiFormatReader::default();
+
+    let Ok(result) = multi_format_reader.decode_with_hints(
+        &mut rxing::BinaryBitmap::new(Rc::new(rxing::common::HybridBinarizer::new(Box::new(
+            rxing::RGBLuminanceSource::new_with_width_height_pixels( width as usize, height as usize,&data),
+        )))),
+        &hints,
+    ) else {
+        return Err("not found".to_owned());
+    };
+
     Ok(result.into())
 }
