@@ -164,8 +164,7 @@ impl From<rxing::RXingResult> for BarcodeResult {
             result_points: value
                 .getRXingResultPoints()
                 .iter()
-                .map(|rxp| [rxp.getX(), rxp.getY()])
-                .flatten()
+                .flat_map(|rxp| [rxp.getX(), rxp.getY()])
                 .collect(),
             format: value.getBarcodeFormat().to_owned().into(),
             // resultMetadata: value.getRXingResultMetadata(),
