@@ -1,3 +1,5 @@
+mod decode_hints;
+
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -211,6 +213,41 @@ pub fn decode_barcode(
         return Err("not found".to_owned());
     };
     Ok(result.into())
+}
+
+#[wasm_bindgen]
+/// Convert a javascript image context's data into luma 8.
+/// 
+/// Data for this function can be found from any canvas object
+/// using the `data` property of an `ImageData` object.
+/// Such an object could be obtained using the `getImageData` 
+/// method of a `CanvasRenderingContext2D` object.
+pub fn convert_js_image_to_luma(data: &[u8]) -> Vec<u8> {
+    
+    let mut luma_data = Vec::new();
+    for src_pixel in data.chunks_exact(4) {
+        let [red,green,blue,alpha] = src_pixel else {
+            continue;
+        };
+        let pixel = 
+        if *alpha == 0 {
+            // white, so we know its luminance is 255
+            0xFF
+        } else {
+            // .299R + 0.587G + 0.114B (YUV/YIQ for PAL and NTSC),
+            // (306*R) >> 10 is approximately equal to R*0.299, and so on.
+            // 0x200 >> 10 is 0.5, it implements rounding.
+
+            ((306 * (*red as u64)
+                + 601 * (*green as u64)
+                + 117 * (*blue as u64)
+                + 0x200)
+                >> 10) as u8
+        };
+        luma_data.push(pixel);
+    }
+    
+    luma_data
 }
 
 #[wasm_bindgen]
