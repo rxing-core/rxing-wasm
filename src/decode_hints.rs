@@ -80,43 +80,54 @@ pub enum DecodeHintTypes {
 
 impl From<DecodeHintTypes> for rxing::DecodeHintType {
     fn from(value: DecodeHintTypes) -> Self {
-        todo!()
+        match value {
+            DecodeHintTypes::Other => rxing::DecodeHintType::OTHER,
+            DecodeHintTypes::PureBarcode => rxing::DecodeHintType::PURE_BARCODE,
+            DecodeHintTypes::PossibleFormats => rxing::DecodeHintType::POSSIBLE_FORMATS,
+            DecodeHintTypes::TryHarder => rxing::DecodeHintType::TRY_HARDER,
+            DecodeHintTypes::CharacterSet => rxing::DecodeHintType::CHARACTER_SET,
+            DecodeHintTypes::AllowedLengths => rxing::DecodeHintType::ALLOWED_LENGTHS,
+            DecodeHintTypes::AssumeCode39CheckDigit => {
+                rxing::DecodeHintType::ASSUME_CODE_39_CHECK_DIGIT
+            }
+            DecodeHintTypes::AssumeGs1 => rxing::DecodeHintType::ASSUME_GS1,
+            DecodeHintTypes::ReturnCodabarStartEnd => {
+                rxing::DecodeHintType::RETURN_CODABAR_START_END
+            }
+            DecodeHintTypes::NeedResultPointCallback => {
+                rxing::DecodeHintType::NEED_RESULT_POINT_CALLBACK
+            }
+            DecodeHintTypes::AllowedEanExtensions => rxing::DecodeHintType::ALLOWED_EAN_EXTENSIONS,
+            DecodeHintTypes::AlsoInverted => rxing::DecodeHintType::ALSO_INVERTED,
+        }
     }
 }
 
 #[wasm_bindgen]
 pub struct DecodeHintDictionary(HashMap<rxing::DecodeHintType, rxing::DecodeHintValue>);
 
+#[wasm_bindgen]
 impl DecodeHintDictionary {
     #[wasm_bindgen(constructor)]
     pub fn new() -> DecodeHintDictionary {
         DecodeHintDictionary(HashMap::new())
     }
 
-    #[wasm_bindgen]
-    pub fn get_hint(&self, hint: DecodeHintTypes) -> Result<String, String> {
+    pub fn get_hint(&self, hint: DecodeHintTypes) -> String {
         if let Some(val) = self.0.get(&hint.into()) {
-            Ok(match val {
-                rxing::DecodeHintValue::Other(var) => todo!(),
-                rxing::DecodeHintValue::PureBarcode(var) => todo!(),
-                rxing::DecodeHintValue::PossibleFormats(var) => todo!(),
-                rxing::DecodeHintValue::TryHarder(var) => todo!(),
-                rxing::DecodeHintValue::CharacterSet(var) => todo!(),
-                rxing::DecodeHintValue::AllowedLengths(var) => todo!(),
-                rxing::DecodeHintValue::AssumeCode39CheckDigit(var) => todo!(),
-                rxing::DecodeHintValue::AssumeGs1(var) => todo!(),
-                rxing::DecodeHintValue::ReturnCodabarStartEnd(var) => todo!(),
-                rxing::DecodeHintValue::NeedResultPointCallback(var) => todo!(),
-                rxing::DecodeHintValue::AllowedEanExtensions(var) => todo!(),
-                rxing::DecodeHintValue::AlsoInverted(var) => todo!(),
-            })
+            match val {
+                _ => todo!(),
+            }
         } else {
-            Err(String::from("hint not set"))
+            "".to_owned()
         }
     }
 
-    #[wasm_bindgen]
-    pub fn set_hint(&mut self, hint: DecodeHintTypes, value: &str) {
+    pub fn set_hint(&self, hint: DecodeHintTypes, value: &str) -> bool {
+        todo!()
+    }
+
+    pub fn remove_hint(&self, hint: DecodeHintTypes) -> bool {
         todo!()
     }
 }
