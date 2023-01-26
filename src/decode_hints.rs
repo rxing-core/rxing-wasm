@@ -118,21 +118,27 @@ impl DecodeHintDictionary {
     pub fn get_hint(&self, hint: DecodeHintTypes) -> String {
         if let Some(val) = self.0.get(&hint.into()) {
             match val {
-                rxing::DecodeHintValue::Other(_) => todo!(),
-                rxing::DecodeHintValue::PureBarcode(_) => todo!(),
-                rxing::DecodeHintValue::PossibleFormats(_) => todo!(),
-                rxing::DecodeHintValue::TryHarder(_) => todo!(),
-                rxing::DecodeHintValue::CharacterSet(_) => todo!(),
-                rxing::DecodeHintValue::AllowedLengths(_) => todo!(),
-                rxing::DecodeHintValue::AssumeCode39CheckDigit(_) => todo!(),
-                rxing::DecodeHintValue::AssumeGs1(_) => todo!(),
-                rxing::DecodeHintValue::ReturnCodabarStartEnd(_) => todo!(),
-                rxing::DecodeHintValue::NeedResultPointCallback(_) => todo!(),
-                rxing::DecodeHintValue::AllowedEanExtensions(_) => todo!(),
-                rxing::DecodeHintValue::AlsoInverted(_) => todo!(),
+                rxing::DecodeHintValue::Other(val) | rxing::DecodeHintValue::CharacterSet(val) => {
+                    val.to_owned()
+                }
+                rxing::DecodeHintValue::PureBarcode(val)
+                | rxing::DecodeHintValue::AssumeCode39CheckDigit(val)
+                | rxing::DecodeHintValue::AssumeGs1(val)
+                | rxing::DecodeHintValue::ReturnCodabarStartEnd(val)
+                | rxing::DecodeHintValue::TryHarder(val)
+                | rxing::DecodeHintValue::AlsoInverted(val) => val.to_string(),
+
+                rxing::DecodeHintValue::PossibleFormats(val) => val
+                    .iter()
+                    .fold("".to_string(), |acc, v| acc + v.to_string().as_str()),
+                rxing::DecodeHintValue::AllowedLengths(val)
+                | rxing::DecodeHintValue::AllowedEanExtensions(val) => val
+                    .iter()
+                    .fold("".to_string(), |acc, v| acc + v.to_string().as_str()),
+                rxing::DecodeHintValue::NeedResultPointCallback(_) => String::from("UNSUPORTED"),
             }
         } else {
-            "".to_owned()
+            String::from("")
         }
     }
 
