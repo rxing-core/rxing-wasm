@@ -10,7 +10,7 @@ license = "Apache 2.0"
 crate-type = ["cdylib", "rlib"]
 
 [features]
-default = ["console_error_panic_hook"]
+default = ["console_error_panic_hook", "decode_hints"]
 decode_hints = []
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -113,27 +113,149 @@ impl DecodeHintDictionary {
         DecodeHintDictionary(HashMap::new())
     }
 
+    #[wasm_bindgen]
     pub fn get_hint(&self, hint: DecodeHintTypes) -> String {
         if let Some(val) = self.0.get(&hint.into()) {
             match val {
-                _ => todo!(),
+                rxing::DecodeHintValue::Other(_) => todo!(),
+                rxing::DecodeHintValue::PureBarcode(_) => todo!(),
+                rxing::DecodeHintValue::PossibleFormats(_) => todo!(),
+                rxing::DecodeHintValue::TryHarder(_) => todo!(),
+                rxing::DecodeHintValue::CharacterSet(_) => todo!(),
+                rxing::DecodeHintValue::AllowedLengths(_) => todo!(),
+                rxing::DecodeHintValue::AssumeCode39CheckDigit(_) => todo!(),
+                rxing::DecodeHintValue::AssumeGs1(_) => todo!(),
+                rxing::DecodeHintValue::ReturnCodabarStartEnd(_) => todo!(),
+                rxing::DecodeHintValue::NeedResultPointCallback(_) => todo!(),
+                rxing::DecodeHintValue::AllowedEanExtensions(_) => todo!(),
+                rxing::DecodeHintValue::AlsoInverted(_) => todo!(),
             }
         } else {
             "".to_owned()
         }
     }
 
-    pub fn set_hint(&self, hint: DecodeHintTypes, value: &str) -> bool {
-        todo!()
+    #[wasm_bindgen]
+    pub fn set_hint(&mut self, hint: DecodeHintTypes, value: String) -> bool {
+        if value.is_empty() {
+            return false;
+        }
+
+        match hint {
+            DecodeHintTypes::Other => {
+                self.0
+                    .insert(hint.into(), rxing::DecodeHintValue::Other(value));
+            }
+            DecodeHintTypes::PureBarcode => {
+                let Ok(pure_barcode) =  value.parse() else {
+                    return false;
+                };
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::PureBarcode(pure_barcode),
+                );
+            }
+            DecodeHintTypes::PossibleFormats => {
+                let formats =
+                    HashSet::from_iter(value.split(',').map(|f| rxing::BarcodeFormat::from(f)));
+
+                if formats.is_empty() {
+                    return false;
+                }
+
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::PossibleFormats(HashSet::from(formats)),
+                );
+            }
+            DecodeHintTypes::TryHarder => {
+                let Ok(try_harder) =  value.parse() else {
+                    return false;
+                };
+                self.0
+                    .insert(hint.into(), rxing::DecodeHintValue::TryHarder(try_harder));
+            }
+            DecodeHintTypes::CharacterSet => {
+                self.0
+                    .insert(hint.into(), rxing::DecodeHintValue::CharacterSet(value));
+            }
+            DecodeHintTypes::AllowedLengths => {
+                let lengths = value.split(",").flat_map(|v| v.parse()).collect();
+
+                self.0
+                    .insert(hint.into(), rxing::DecodeHintValue::AllowedLengths(lengths));
+            }
+            DecodeHintTypes::AssumeCode39CheckDigit => {
+                let Ok(assume_code_39_check_digit) =  value.parse() else {
+                    return false;
+                };
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::AssumeCode39CheckDigit(assume_code_39_check_digit),
+                );
+            }
+            DecodeHintTypes::AssumeGs1 => {
+                let Ok(assume_gs1) =  value.parse() else {
+                    return false;
+                };
+                self.0
+                    .insert(hint.into(), rxing::DecodeHintValue::AssumeGs1(assume_gs1));
+            }
+            DecodeHintTypes::ReturnCodabarStartEnd => {
+                let Ok(return_codebar_start_end) =  value.parse() else {
+                    return false;
+                };
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::ReturnCodabarStartEnd(return_codebar_start_end),
+                );
+            }
+            DecodeHintTypes::NeedResultPointCallback => {
+                return false;
+            }
+            DecodeHintTypes::AllowedEanExtensions => {
+                let extensions = value.split(",").flat_map(|v| v.parse()).collect();
+
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::AllowedEanExtensions(extensions),
+                );
+            }
+            DecodeHintTypes::AlsoInverted => {
+                let Ok(also_inverted) =  value.parse() else {
+                    return false;
+                };
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::AlsoInverted(also_inverted),
+                );
+            }
+        }
+        true
     }
 
-    pub fn remove_hint(&self, hint: DecodeHintTypes) -> bool {
-        todo!()
+    #[wasm_bindgen]
+    pub fn remove_hint(&mut self, hint: DecodeHintTypes) -> bool {
+        let h: rxing::DecodeHintType = hint.into();
+        if self.0.contains_key(&h) {
+            if let Some(_) = self.0.remove(&h) {
+                true
+            } else {
+                false
+            }
+        } else {
+            false
+        }
     }
 }
 
 impl DecodeHintDictionary {
     pub fn get_dictionary(&self) -> &HashMap<rxing::DecodeHintType, rxing::DecodeHintValue> {
         &self.0
+    }
+    pub fn get_dictionary_mut(
+        &mut self,
+    ) -> &mut HashMap<rxing::DecodeHintType, rxing::DecodeHintValue> {
+        &mut self.0
     }
 }

@@ -276,3 +276,17 @@ pub fn decode_barcode_rgb(
 
     Ok(result.into())
 }
+
+#[cfg(feature = "decode_hints")]
+#[wasm_bindgen]
+pub fn decode_barcode_with_hints(
+    data: Vec<u8>,
+    width: u32,
+    height: u32,
+    hints: &mut decode_hints::DecodeHintDictionary,
+) -> Result<BarcodeResult, String> {
+    let Ok(result) = rxing::helpers::detect_in_luma_with_hints(data, width, height, None, hints.get_dictionary_mut()) else {
+            return Err("not found".to_owned());
+        };
+    Ok(result.into())
+}
