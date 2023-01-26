@@ -1,6 +1,6 @@
 [package]
 name = "rxing-wasm"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "wasm bindings for rxing to provide commong barcode operations (decode/encode)"
 repository = "https://github.com/hschimke/rxing-wasm"

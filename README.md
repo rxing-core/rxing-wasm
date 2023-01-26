@@ -42,3 +42,12 @@ pub fn decode_barcode(
     try_harder: Option<bool>,
 ) -> Result<BarcodeResult, String>;
 ```
+
+```rust
+pub fn decode_barcode_with_hints(
+    data: Vec<u8>,
+    width: u32,
+    height: u32,
+    hints: &mut decode_hints::DecodeHintDictionary,
+) -> Result<BarcodeResult, String>;
+```
