@@ -104,6 +104,7 @@ impl From<DecodeHintTypes> for rxing::DecodeHintType {
 }
 
 #[wasm_bindgen]
+#[derive(Default, Clone)]
 pub struct DecodeHintDictionary(HashMap<rxing::DecodeHintType, rxing::DecodeHintValue>);
 
 #[wasm_bindgen]
@@ -156,8 +157,7 @@ impl DecodeHintDictionary {
                 );
             }
             DecodeHintTypes::PossibleFormats => {
-                let formats =
-                    HashSet::from_iter(value.split(',').map(|f| rxing::BarcodeFormat::from(f)));
+                let formats = HashSet::from_iter(value.split(',').map(rxing::BarcodeFormat::from));
 
                 if formats.is_empty() {
                     return false;
@@ -165,7 +165,7 @@ impl DecodeHintDictionary {
 
                 self.0.insert(
                     hint.into(),
-                    rxing::DecodeHintValue::PossibleFormats(HashSet::from(formats)),
+                    rxing::DecodeHintValue::PossibleFormats(formats),
                 );
             }
             DecodeHintTypes::TryHarder => {
@@ -180,7 +180,7 @@ impl DecodeHintDictionary {
                     .insert(hint.into(), rxing::DecodeHintValue::CharacterSet(value));
             }
             DecodeHintTypes::AllowedLengths => {
-                let lengths = value.split(",").flat_map(|v| v.parse()).collect();
+                let lengths = value.split(',').flat_map(|v| v.parse()).collect();
 
                 self.0
                     .insert(hint.into(), rxing::DecodeHintValue::AllowedLengths(lengths));
@@ -214,7 +214,7 @@ impl DecodeHintDictionary {
                 return false;
             }
             DecodeHintTypes::AllowedEanExtensions => {
-                let extensions = value.split(",").flat_map(|v| v.parse()).collect();
+                let extensions = value.split(',').flat_map(|v| v.parse()).collect();
 
                 self.0.insert(
                     hint.into(),
@@ -238,11 +238,7 @@ impl DecodeHintDictionary {
     pub fn remove_hint(&mut self, hint: DecodeHintTypes) -> bool {
         let h: rxing::DecodeHintType = hint.into();
         if self.0.contains_key(&h) {
-            if let Some(_) = self.0.remove(&h) {
-                true
-            } else {
-                false
-            }
+            self.0.remove(&h).is_some()
         } else {
             false
         }
