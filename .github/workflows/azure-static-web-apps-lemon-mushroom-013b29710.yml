@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths: 
-      - examples/webpack+js/**
+      - 'examples/webpack+js/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
