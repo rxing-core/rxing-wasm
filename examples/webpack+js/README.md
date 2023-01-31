@@ -1,0 +1,1 @@
+# A WASM web app for very simple barcode decoding

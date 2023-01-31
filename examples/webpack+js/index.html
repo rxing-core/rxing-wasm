@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>rxing web</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+  <script src="./bootstrap.js"></script>
+  <h1>RXing - Decode Barcodes</h1>
+  <div id="box">
+    <div id="controls">
+      <div id="DecodeHints">
+        <label for="Other">Other:</label><input type="text" name="Other" id="Other" />
+        <label for="PureBarcode">PureBarcode:</label><input type="checkbox" name="PureBarcode" id="PureBarcode" />
+        <label for="PossibleFormats">PossibleFormats:</label><input type="text" name="PossibleFormats"
+          id="PossibleFormats" />
+        <label for="TryHarder">TryHarder:</label><input type="checkbox" name="TryHarder" id="TryHarder" />
+        <label for="CharacterSet">CharacterSet:</label><input type="text" name="CharacterSet" id="CharacterSet" />
+        <label for="AllowedLengths">AllowedLengths:</label><input type="text" name="AllowedLengths"
+          id="AllowedLengths" />
+        <label for="AssumeCode39CheckDigit">AssumeCode39CheckDigit:</label><input type="checkbox"
+          name="AssumeCode39CheckDigit" id="AssumeCode39CheckDigit" />
+        <label for="AssumeGs1">AssumeGs1:</label><input type="checkbox" name="AssumeGs1" id="AssumeGs1" />
+        <label for="ReturnCodabarStartEnd">ReturnCodabarStartEnd:</label><input type="checkbox"
+          name="ReturnCodabarStartEnd" id="ReturnCodabarStartEnd" />
+        <label for="NeedResultPointCallback">NeedResultPointCallback:</label><span>unsupported</span>
+        <label for="AllowedEanExtensions">AllowedEanExtensions:</label><input type="text" name="AllowedEanExtensions"
+          id="AllowedEanExtensions" />
+        <label for="AlsoInverted">AlsoInverted:</label><input type="checkbox" name="AlsoInverted" id="AlsoInverted" />
+      </div>
+      <input type="file" id="image_file_input" />
+      <button id="scan_btn" disabled="true">Scan</button>
+    </div>
+
+    <canvas id="cvs"></canvas>
+  </div>
+
+  <table id="output" hidden="true">
+    <tr>
+      <td class="field">Text</td>
+      <td class="data" id="text_result_td"></td>
+    </tr>
+    <tr>
+      <td class="field">Format</td>
+      <td class="data" id="format_result_td"></td>
+    </tr>
+    <!--<tr>
+      <td class="field">Points</td>
+      <td class="data" id="points_result_td"></td>
+    </tr>-->
+    <tr>
+      <td class="field">Raw Bytes</td>
+      <td class="data" id="raw_bytes_result_td"></td>
+    </tr>
+  </table>
+</body>
+
+</html>
