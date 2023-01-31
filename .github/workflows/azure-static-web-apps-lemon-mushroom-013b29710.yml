@@ -2,8 +2,6 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
     paths: 
       - 'examples/webpack+js/**'
   pull_request:
