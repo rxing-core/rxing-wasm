@@ -1,0 +1,24 @@
+{
+  "name": "rxing-web",
+  "version": "0.1.0",
+  "description": "A web application to decode barcodes using rxing-wasm",
+  "main": "index.js",
+  "bin": {
+    "create-wasm-app": ".bin/create-wasm-app.js"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server"
+  },
+  "author": "Henry Schimke",
+  "license": "(MIT OR Apache-2.0)",
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "rxing-wasm": "^0.1.5"
+  }
+}
