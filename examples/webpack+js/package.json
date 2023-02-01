@@ -19,6 +19,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "rxing-wasm": "^0.1.5"
+    "rxing-wasm": "^0.1.6"
   }
 }
