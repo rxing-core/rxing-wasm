@@ -1,6 +1,6 @@
 [package]
 name = "rxing-wasm"
-version = "0.1.8"
+version = "0.1.9"
 edition = "2021"
 description = "wasm bindings for rxing to provide commong barcode operations (decode/encode)"
 repository = "https://github.com/hschimke/rxing-wasm"
@@ -16,7 +16,7 @@ decode_hints = []
 
 [dependencies]
 wasm-bindgen = "0.2.63"
-js-sys = "0.3.61"
+#js-sys = "0.3.61"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
