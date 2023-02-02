@@ -124,7 +124,7 @@ pub struct BarcodeResult {
     num_bits: usize,
     result_points: Vec<f32>,
     format: BarcodeFormat,
-    // result_metadata: HashMap<String, String>,
+    result_metadata: HashMap<String, String>,
     timestamp: isize,
 }
 
@@ -155,55 +155,55 @@ impl BarcodeResult {
         self.text.to_owned()
     }
 
-    /*pub fn get_meta_data(&self) -> js_sys::Map {
+    pub fn get_meta_data(&self) -> js_sys::Map {
         let output_map = js_sys::Map::new();
         for (k, v) in &self.result_metadata {
             output_map.set(
-                &wasm_bindgen::JsValue::from(k),
                 &wasm_bindgen::JsValue::from(v),
+                &wasm_bindgen::JsValue::from(k),
             );
         }
         output_map
-    }*/
+    }
 }
 
-// fn get_result_metadata_name(mdtn: &rxing::RXingResultMetadataType) -> String {
-//     match mdtn {
-//         rxing::RXingResultMetadataType::OTHER => "OTHER",
-//         rxing::RXingResultMetadataType::ORIENTATION => "Orientation",
-//         rxing::RXingResultMetadataType::BYTE_SEGMENTS => "Byte_Segments",
-//         rxing::RXingResultMetadataType::ERROR_CORRECTION_LEVEL => "Error_Correction_Level",
-//         rxing::RXingResultMetadataType::ISSUE_NUMBER => "Issue_Number",
-//         rxing::RXingResultMetadataType::SUGGESTED_PRICE => "Suggested_Price",
-//         rxing::RXingResultMetadataType::POSSIBLE_COUNTRY => "Possible_Country",
-//         rxing::RXingResultMetadataType::UPC_EAN_EXTENSION => "UPC/EAN_Extension",
-//         rxing::RXingResultMetadataType::PDF417_EXTRA_METADATA => "PDF417_Extra_MetaData",
-//         rxing::RXingResultMetadataType::STRUCTURED_APPEND_SEQUENCE => "Structured_Append_Sequence",
-//         rxing::RXingResultMetadataType::STRUCTURED_APPEND_PARITY => "Structured_Append_Parity",
-//         rxing::RXingResultMetadataType::SYMBOLOGY_IDENTIFIER => "Symbology_Identifier",
-//     }
-//     .to_owned()
-// }
+fn get_result_metadata_name(mdtn: &rxing::RXingResultMetadataType) -> String {
+    match mdtn {
+        rxing::RXingResultMetadataType::OTHER => "OTHER",
+        rxing::RXingResultMetadataType::ORIENTATION => "Orientation",
+        rxing::RXingResultMetadataType::BYTE_SEGMENTS => "Byte_Segments",
+        rxing::RXingResultMetadataType::ERROR_CORRECTION_LEVEL => "Error_Correction_Level",
+        rxing::RXingResultMetadataType::ISSUE_NUMBER => "Issue_Number",
+        rxing::RXingResultMetadataType::SUGGESTED_PRICE => "Suggested_Price",
+        rxing::RXingResultMetadataType::POSSIBLE_COUNTRY => "Possible_Country",
+        rxing::RXingResultMetadataType::UPC_EAN_EXTENSION => "UPC/EAN_Extension",
+        rxing::RXingResultMetadataType::PDF417_EXTRA_METADATA => "PDF417_Extra_MetaData",
+        rxing::RXingResultMetadataType::STRUCTURED_APPEND_SEQUENCE => "Structured_Append_Sequence",
+        rxing::RXingResultMetadataType::STRUCTURED_APPEND_PARITY => "Structured_Append_Parity",
+        rxing::RXingResultMetadataType::SYMBOLOGY_IDENTIFIER => "Symbology_Identifier",
+    }
+    .to_owned()
+}
 
-// fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> String {
-//     match res_mdt_val {
-//         rxing::RXingResultMetadataValue::OTHER(v)
-//         | rxing::RXingResultMetadataValue::SuggestedPrice(v)
-//         | rxing::RXingResultMetadataValue::PossibleCountry(v)
-//         | rxing::RXingResultMetadataValue::UpcEanExtension(v)
-//         | rxing::RXingResultMetadataValue::SymbologyIdentifier(v)
-//         | rxing::RXingResultMetadataValue::ErrorCorrectionLevel(v) => v.to_owned(),
+fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> String {
+    match res_mdt_val {
+        rxing::RXingResultMetadataValue::OTHER(v)
+        | rxing::RXingResultMetadataValue::SuggestedPrice(v)
+        | rxing::RXingResultMetadataValue::PossibleCountry(v)
+        | rxing::RXingResultMetadataValue::UpcEanExtension(v)
+        | rxing::RXingResultMetadataValue::SymbologyIdentifier(v)
+        | rxing::RXingResultMetadataValue::ErrorCorrectionLevel(v) => v.to_owned(),
 
-//         rxing::RXingResultMetadataValue::Orientation(v)
-//         | rxing::RXingResultMetadataValue::IssueNumber(v)
-//         | rxing::RXingResultMetadataValue::StructuredAppendSequence(v)
-//         | rxing::RXingResultMetadataValue::StructuredAppendParity(v) => v.to_string(),
+        rxing::RXingResultMetadataValue::Orientation(v)
+        | rxing::RXingResultMetadataValue::IssueNumber(v)
+        | rxing::RXingResultMetadataValue::StructuredAppendSequence(v)
+        | rxing::RXingResultMetadataValue::StructuredAppendParity(v) => v.to_string(),
 
-//         rxing::RXingResultMetadataValue::ByteSegments(v) => format!("{v:?}"),
+        rxing::RXingResultMetadataValue::ByteSegments(v) => format!("{v:?}"),
 
-//         rxing::RXingResultMetadataValue::Pdf417ExtraMetadata(v) => format!("{v:?}"),
-//     }
-// }
+        rxing::RXingResultMetadataValue::Pdf417ExtraMetadata(v) => format!("{v:?}"),
+    }
+}
 
 impl From<rxing::RXingResult> for BarcodeResult {
     fn from(value: rxing::RXingResult) -> Self {
@@ -219,11 +219,11 @@ impl From<rxing::RXingResult> for BarcodeResult {
                 .flat_map(|rxp| [rxp.getX(), rxp.getY()])
                 .collect(),
             format: value.getBarcodeFormat().to_owned().into(),
-            // result_metadata: value
-            //     .getRXingResultMetadata()
-            //     .iter()
-            //     .map(|(k, v)| (get_result_metadata_name(k), get_result_metadata_value(v)))
-            //     .collect::<HashMap<String, String>>(),
+            result_metadata: value
+                .getRXingResultMetadata()
+                .iter()
+                .map(|(k, v)| (get_result_metadata_name(k), get_result_metadata_value(v)))
+                .collect::<HashMap<String, String>>(),
             timestamp: value.getTimestamp() as isize,
         }
     }

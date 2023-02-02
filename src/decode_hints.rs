@@ -249,6 +249,22 @@ impl DecodeHintDictionary {
             false
         }
     }
+
+    // #[wasm_bindgen]
+    // pub fn setResultPointCallback(&mut self, callback: &js_sys::Function){
+    //     let clos = |point|  {
+    //         let this = JsValue::null();
+    //         let js_point = wasm_bindgen::JsValue::from(point);
+    //         callback.call1(&this, &js_point);
+    //     };
+    //     self.0.insert(&rxing::DecodeHintType::NEED_RESULT_POINT_CALLBACK, &rxing::DecodeHintValue::NeedResultPointCallback(
+    //         &clos
+    //     ));
+    // }
+
+    // pub fn clearResultPointCallback(&mut self) -> bool {
+    //     self.0.remove(&rxing::DecodeHintType::NEED_RESULT_POINT_CALLBACK).is_some()
+    // }
 }
 
 impl DecodeHintDictionary {
