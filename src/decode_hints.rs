@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::{collections::{HashMap, HashSet}};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -252,16 +252,16 @@ impl DecodeHintDictionary {
 
     // #[wasm_bindgen]
     // pub fn setResultPointCallback(&mut self, callback: &js_sys::Function){
-    //     let clos = |point|  {
-    //         let this = JsValue::null();
-    //         let js_point = wasm_bindgen::JsValue::from(point);
-    //         callback.call1(&this, &js_point);
-    //     };
-    //     self.0.insert(&rxing::DecodeHintType::NEED_RESULT_POINT_CALLBACK, &rxing::DecodeHintValue::NeedResultPointCallback(
-    //         &clos
+    //     self.0.insert(rxing::DecodeHintType::NEED_RESULT_POINT_CALLBACK, rxing::DecodeHintValue::NeedResultPointCallback(
+    //         Rc::new(|point: &dyn rxing::ResultPoint|  {
+    //             let this = JsValue::null();
+    //             let js_point = wasm_bindgen::JsValue::from( js_sys::Array::from_iter([wasm_bindgen::JsValue::from(point.getX()), wasm_bindgen::JsValue::from(point.getY())].iter()) );
+    //             callback.call1(&this, &js_point);
+    //         })
     //     ));
     // }
 
+    // #[wasm_bindgen]
     // pub fn clearResultPointCallback(&mut self) -> bool {
     //     self.0.remove(&rxing::DecodeHintType::NEED_RESULT_POINT_CALLBACK).is_some()
     // }

@@ -181,6 +181,8 @@ fn get_result_metadata_name(mdtn: &rxing::RXingResultMetadataType) -> String {
         rxing::RXingResultMetadataType::STRUCTURED_APPEND_SEQUENCE => "Structured_Append_Sequence",
         rxing::RXingResultMetadataType::STRUCTURED_APPEND_PARITY => "Structured_Append_Parity",
         rxing::RXingResultMetadataType::SYMBOLOGY_IDENTIFIER => "Symbology_Identifier",
+        rxing::RXingResultMetadataType::IS_MIRRORED => "Is_Mirrored",
+        rxing::RXingResultMetadataType::CONTENT_TYPE => "Content_Type",
     }
     .to_owned()
 }
@@ -192,6 +194,7 @@ fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> S
         | rxing::RXingResultMetadataValue::PossibleCountry(v)
         | rxing::RXingResultMetadataValue::UpcEanExtension(v)
         | rxing::RXingResultMetadataValue::SymbologyIdentifier(v)
+        | rxing::RXingResultMetadataValue::ContentType(v)
         | rxing::RXingResultMetadataValue::ErrorCorrectionLevel(v) => v.to_owned(),
 
         rxing::RXingResultMetadataValue::Orientation(v)
@@ -202,6 +205,8 @@ fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> S
         rxing::RXingResultMetadataValue::ByteSegments(v) => format!("{v:?}"),
 
         rxing::RXingResultMetadataValue::Pdf417ExtraMetadata(v) => format!("{v:?}"),
+        
+        rxing::RXingResultMetadataValue::IsMirrored(v) => v.to_string(),
     }
 }
 

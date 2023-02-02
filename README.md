@@ -55,6 +55,8 @@ Result metadata is now available through the `get_result_metadata_name` method o
 * `Structured_Append_Sequence`
 * `Structured_Append_Parity`
 * `Symbology_Identifier`
+* `Is_Mirrored`
+* `Content_Type`
 
 
 It is important to note that not all values will be set for all results.
