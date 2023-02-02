@@ -34,29 +34,34 @@
       </div>
       <input type="file" id="image_file_input" />
       <button id="scan_btn" disabled="true">Scan</button>
+      
+      <table id="output" hidden="true">
+        <tr>
+          <td class="field">Text</td>
+          <td class="data" id="text_result_td"></td>
+        </tr>
+        <tr>
+          <td class="field">Format</td>
+          <td class="data" id="format_result_td"></td>
+        </tr>
+        <!--<tr>
+          <td class="field">Points</td>
+          <td class="data" id="points_result_td"></td>
+        </tr>-->
+        <tr>
+          <td class="field">Raw Bytes</td>
+          <td class="data" id="raw_bytes_result_td"></td>
+        </tr>
+        <tr>
+          <td class="field">Meta Data:</td>
+          <td class="data" id="medata_data_result_td"></td>
+        </tr>
+      </table>
     </div>
 
     <canvas id="cvs"></canvas>
   </div>
 
-  <table id="output" hidden="true">
-    <tr>
-      <td class="field">Text</td>
-      <td class="data" id="text_result_td"></td>
-    </tr>
-    <tr>
-      <td class="field">Format</td>
-      <td class="data" id="format_result_td"></td>
-    </tr>
-    <!--<tr>
-      <td class="field">Points</td>
-      <td class="data" id="points_result_td"></td>
-    </tr>-->
-    <tr>
-      <td class="field">Raw Bytes</td>
-      <td class="data" id="raw_bytes_result_td"></td>
-    </tr>
-  </table>
 </body>
 
 </html>

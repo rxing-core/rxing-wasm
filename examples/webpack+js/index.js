@@ -37,16 +37,23 @@ function onClickScan() {
     } catch (e) {
         alert("Issue decoding: " + e);
     }
-    write_results(result.format(), result.text(), result.raw_bytes(), result.result_points());
+    write_results(result.format(), result.text(), result.raw_bytes(), result.result_points(), result.get_meta_data());
 }
 
-function write_results(format, text, raw_bytes, _points) {
+function write_results(format, text, raw_bytes, _points, metadata) {
     // const points_formatted = [];
     // const chunkSize = 2;
     // console.log(JSON.stringify(points));
     // for (let i = 0; i < points.length; i += chunkSize) {
     //     const chunk = points.slice(i, i + chunkSize);
     //     points_formatted.push([chunk[0], chunk[1]]);
+    // }
+
+    let metadata_string = "";
+    metadata.forEach((k,v) => {metadata_string += `${k}: ${v}\n`});
+    // for (const md_k of metadata.keys()){
+    //     // console.log(`${md_k}: ${metadata.get(md_k)}\n`);
+    //     metadata += `${md_k}: ${metadata.get(md_k)}\n`;
     // }
 
     document.getElementById("text_result_td").innerText = text;
@@ -56,6 +63,8 @@ function write_results(format, text, raw_bytes, _points) {
     // document.getElementById("points_result_td").innerText = points_formatted.reduce((acc, point) => { acc + "(" + point[0] + "," + point[1], ") " }, "");
 
     document.getElementById("raw_bytes_result_td").innerText = Object.keys(raw_bytes).map((k) => raw_bytes[k]).join(', '); //.toString().split(",");//.reduce((acc,v)=>{acc + "-" + v}, "");
+
+    document.getElementById("medata_data_result_td").innerText = metadata_string;
 
     output.hidden = false;
 }
