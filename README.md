@@ -41,6 +41,7 @@ The following values are available for the `DecodeHintTypes` enum.
 * `AllowedEanExtensions`: Allowed extension lengths for EAN or UPC barcodes. Other formats will ignore this. A comma separated list of the allowed extension lengths, for example "2", "5" or "2,5". If it is optional to have an extension, do not set this hint. If this is set, and a UPC or EAN barcode is found but an extension is not, then no result will be returned at all.
 * `AlsoInverted`: If true, also tries to decode as inverted image. All configured decoders are simply called a second time with an inverted image. A string with either "true" or "false".
 
+<!--
 ## Result Metadata
 Result metadata is now available through the `get_result_metadata_name` method of the `BarcodeResult` class. The returned result is a javascript `Map` object representing availble decoded metadata. The possible keys are:
 * `OTHER`
@@ -56,7 +57,9 @@ Result metadata is now available through the `get_result_metadata_name` method o
 * `Structured_Append_Parity`
 * `Symbology_Identifier`
 
+
 It is important to note that not all values will be set for all results.
+-->
 
 ## Functions
 ```rust
