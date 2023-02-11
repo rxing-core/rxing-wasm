@@ -1,5 +1,5 @@
 # rxing-wasm
-WASM bindings for common rxing functions. The NPM link is [https://www.npmjs.com/package/rxing-wasm](https://www.npmjs.com/package/rxing-wasm) and the rust source is [https://github.com/hschimke/rxing-wasm](https://github.com/hschimke/rxing-wasm).
+WASM bindings for common rxing functions. The NPM link is [https://www.npmjs.com/package/rxing-wasm](https://www.npmjs.com/package/rxing-wasm) and the rust source is [https://github.com/rxing-core/rxing-wasm](https://github.com/hschimke/rxing-wasm).
 
 ## Data
 The `convert_js_image_to_luma` function is used to convert canvas image data to the luma 8
