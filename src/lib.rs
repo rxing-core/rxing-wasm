@@ -2,7 +2,7 @@
 mod decode_hints;
 
 use std::collections::HashMap;
-use std::rc::Rc;
+
 
 use rxing::{self, ResultPoint};
 use rxing::{Reader, Writer};
@@ -205,7 +205,7 @@ fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> S
         rxing::RXingResultMetadataValue::ByteSegments(v) => format!("{v:?}"),
 
         rxing::RXingResultMetadataValue::Pdf417ExtraMetadata(v) => format!("{v:?}"),
-        
+
         rxing::RXingResultMetadataValue::IsMirrored(v) => v.to_string(),
     }
 }
@@ -324,9 +324,9 @@ pub fn decode_barcode_rgb(
     let mut multi_format_reader = rxing::MultiFormatReader::default();
 
     let Ok(result) = multi_format_reader.decode_with_hints(
-        &mut rxing::BinaryBitmap::new(Rc::new(rxing::common::HybridBinarizer::new(Box::new(
+        &mut rxing::BinaryBitmap::new(rxing::common::HybridBinarizer::new(
             rxing::RGBLuminanceSource::new_with_width_height_pixels( width as usize, height as usize,&data),
-        )))),
+        )),
         &hints,
     ) else {
         return Err("not found".to_owned());
