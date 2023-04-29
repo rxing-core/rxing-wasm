@@ -63,6 +63,8 @@ pub enum BarcodeFormat {
     /** UPC/EAN extension format. Not a stand-alone format. */
     UpcEanExtension,
 
+    MicroQR,
+
     ///
     UnsuportedFormat,
 }
@@ -87,6 +89,7 @@ impl From<BarcodeFormat> for rxing::BarcodeFormat {
             BarcodeFormat::UpcA => rxing::BarcodeFormat::UPC_A,
             BarcodeFormat::UpcE => rxing::BarcodeFormat::UPC_E,
             BarcodeFormat::UpcEanExtension => rxing::BarcodeFormat::UPC_EAN_EXTENSION,
+            BarcodeFormat::MicroQR => rxing::BarcodeFormat::MICRO_QR_CODE,
             BarcodeFormat::UnsuportedFormat => rxing::BarcodeFormat::UNSUPORTED_FORMAT,
         }
     }
@@ -112,6 +115,7 @@ impl From<rxing::BarcodeFormat> for BarcodeFormat {
             rxing::BarcodeFormat::UPC_A => BarcodeFormat::UpcA,
             rxing::BarcodeFormat::UPC_E => BarcodeFormat::UpcE,
             rxing::BarcodeFormat::UPC_EAN_EXTENSION => BarcodeFormat::UpcEanExtension,
+            rxing::BarcodeFormat::MICRO_QR_CODE => BarcodeFormat::MicroQR,
             rxing::BarcodeFormat::UNSUPORTED_FORMAT => BarcodeFormat::UnsuportedFormat,
         }
     }
@@ -183,6 +187,7 @@ fn get_result_metadata_name(mdtn: &rxing::RXingResultMetadataType) -> String {
         rxing::RXingResultMetadataType::SYMBOLOGY_IDENTIFIER => "Symbology_Identifier",
         rxing::RXingResultMetadataType::IS_MIRRORED => "Is_Mirrored",
         rxing::RXingResultMetadataType::CONTENT_TYPE => "Content_Type",
+        rxing::RXingResultMetadataType::IS_INVERTED => "Is_Inverted",
     }
     .to_owned()
 }
@@ -206,7 +211,12 @@ fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> S
 
         rxing::RXingResultMetadataValue::Pdf417ExtraMetadata(v) => format!("{v:?}"),
 
-        rxing::RXingResultMetadataValue::IsMirrored(v) => v.to_string(),
+        rxing::RXingResultMetadataValue::IsMirrored(v) => {
+            v.to_string()
+        },
+        rxing::RXingResultMetadataValue::IsInverted(v) => {
+            v.to_string()
+        },
     }
 }
 
