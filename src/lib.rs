@@ -3,7 +3,6 @@ mod decode_hints;
 
 use std::collections::HashMap;
 
-
 use rxing::{self, ResultPoint};
 use rxing::{Reader, Writer};
 use wasm_bindgen::prelude::*;
@@ -121,6 +120,7 @@ impl From<rxing::BarcodeFormat> for BarcodeFormat {
     }
 }
 
+#[derive(Clone)]
 #[wasm_bindgen]
 pub struct BarcodeResult {
     text: String,
@@ -211,12 +211,8 @@ fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> S
 
         rxing::RXingResultMetadataValue::Pdf417ExtraMetadata(v) => format!("{v:?}"),
 
-        rxing::RXingResultMetadataValue::IsMirrored(v) => {
-            v.to_string()
-        },
-        rxing::RXingResultMetadataValue::IsInverted(v) => {
-            v.to_string()
-        },
+        rxing::RXingResultMetadataValue::IsMirrored(v) => v.to_string(),
+        rxing::RXingResultMetadataValue::IsInverted(v) => v.to_string(),
     }
 }
 
@@ -357,4 +353,48 @@ pub fn decode_barcode_with_hints(
             return Err("not found".to_owned());
         };
     Ok(result.into())
+}
+
+#[wasm_bindgen]
+pub struct MultiDecodeResult {
+    pointer: usize,
+    results: Vec<BarcodeResult>,
+}
+
+#[wasm_bindgen]
+impl MultiDecodeResult {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> MultiDecodeResult {
+        MultiDecodeResult { pointer: 0, results: Vec::default() }
+    }
+
+    fn with_results(results: Vec<BarcodeResult>) -> MultiDecodeResult {
+        MultiDecodeResult {
+            pointer: 0,
+            results
+        }
+    }
+
+    #[wasm_bindgen]
+    pub fn next(&mut self) -> Option<BarcodeResult> {
+        let ret = self.results.get(self.pointer).map(|b| b.clone());
+        self.pointer += 1;
+        ret
+    }
+}
+
+#[cfg(feature = "decode_hints")]
+#[wasm_bindgen]
+pub fn decode_multi(
+    data: Vec<u8>,
+    width: u32,
+    height: u32,
+    hints: &mut decode_hints::DecodeHintDictionary,
+) -> Result<MultiDecodeResult, String> {
+    let Ok(results) = rxing::helpers::detect_multiple_in_luma_with_hints(data, width, height, hints.get_dictionary_mut()) else {
+        return Err("not found".to_owned());
+    };
+    Ok(MultiDecodeResult::with_results(
+         results.into_iter().map(|r| r.into()).collect()
+    ))
 }

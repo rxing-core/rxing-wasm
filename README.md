@@ -92,3 +92,15 @@ pub fn decode_barcode_with_hints(
     hints: &mut decode_hints::DecodeHintDictionary,
 ) -> Result<BarcodeResult, String>;
 ```
+
+```rust
+pub fn decode_multi(
+    data: Vec<u8>,
+    width: u32,
+    height: u32,
+    hints: &mut decode_hints::DecodeHintDictionary,
+) -> Result<MultiDecodeResult, String>;
+```
+
+## Beta Features
+`decode_multi` is currently in beta. The output may be unexpected, or undefined. Please use with caution. The interface may be unstable, and change.
