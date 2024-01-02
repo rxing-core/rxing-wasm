@@ -1,6 +1,6 @@
 [package]
 name = "rxing-wasm"
-version = "0.1.26"
+version = "0.2.0"
 edition = "2021"
 description = "wasm bindings for rxing to provide commong barcode operations (decode/encode)"
 repository = "https://github.com/rxing-core/rxing-wasm"
@@ -25,7 +25,7 @@ js-sys = "0.3.61"
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.6", optional = true }
 
-rxing = {version = "~0.4.11", default-features = false, features = ["wasm_support"]}
+rxing = {version = "~0.5.0", default-features = false, features = ["wasm_support"]}
 #rxing = {path="../rxing", version = "~0.2.23", default-features = false, features = ["wasm_support"]}
 
 [dev-dependencies]

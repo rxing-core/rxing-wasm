@@ -64,6 +64,8 @@ pub enum BarcodeFormat {
 
     MicroQR,
 
+    Telepen,
+
     ///
     UnsuportedFormat,
 }
@@ -90,6 +92,7 @@ impl From<BarcodeFormat> for rxing::BarcodeFormat {
             BarcodeFormat::UpcEanExtension => rxing::BarcodeFormat::UPC_EAN_EXTENSION,
             BarcodeFormat::MicroQR => rxing::BarcodeFormat::MICRO_QR_CODE,
             BarcodeFormat::UnsuportedFormat => rxing::BarcodeFormat::UNSUPORTED_FORMAT,
+            BarcodeFormat::Telepen => rxing::BarcodeFormat::TELEPEN,
         }
     }
 }
@@ -116,6 +119,7 @@ impl From<rxing::BarcodeFormat> for BarcodeFormat {
             rxing::BarcodeFormat::UPC_EAN_EXTENSION => BarcodeFormat::UpcEanExtension,
             rxing::BarcodeFormat::MICRO_QR_CODE => BarcodeFormat::MicroQR,
             rxing::BarcodeFormat::UNSUPORTED_FORMAT => BarcodeFormat::UnsuportedFormat,
+            rxing::BarcodeFormat::TELEPEN => BarcodeFormat::Telepen,
         }
     }
 }
@@ -255,7 +259,9 @@ pub fn encode_barcode(
         width as i32,
         height as i32,
         &std::collections::HashMap::new(),
-    ) else { return Err("couldn't encode".to_owned()) };
+    ) else {
+        return Err("couldn't encode".to_owned());
+    };
     Ok(bit_matrix.to_string())
 }
 
@@ -274,7 +280,9 @@ pub fn decode_barcode(
             rxing::DecodeHintValue::TryHarder(true),
         );
     }
-    let Ok(result) = rxing::helpers::detect_in_luma_with_hints(data, width, height, None, &mut hints) else {
+    let Ok(result) =
+        rxing::helpers::detect_in_luma_with_hints(data, width, height, None, &mut hints)
+    else {
         return Err("not found".to_owned());
     };
     Ok(result.into())
@@ -290,7 +298,7 @@ pub fn decode_barcode(
 pub fn convert_js_image_to_luma(data: &[u8]) -> Vec<u8> {
     let mut luma_data = Vec::new();
     for src_pixel in data.chunks_exact(4) {
-        let [red,green,blue,alpha] = src_pixel else {
+        let [red, green, blue, alpha] = src_pixel else {
             continue;
         };
         let pixel = if *alpha == 0 {
@@ -331,7 +339,11 @@ pub fn decode_barcode_rgb(
 
     let Ok(result) = multi_format_reader.decode_with_hints(
         &mut rxing::BinaryBitmap::new(rxing::common::HybridBinarizer::new(
-            rxing::RGBLuminanceSource::new_with_width_height_pixels( width as usize, height as usize,&data),
+            rxing::RGBLuminanceSource::new_with_width_height_pixels(
+                width as usize,
+                height as usize,
+                &data,
+            ),
         )),
         &hints,
     ) else {
@@ -349,9 +361,15 @@ pub fn decode_barcode_with_hints(
     height: u32,
     hints: &mut decode_hints::DecodeHintDictionary,
 ) -> Result<BarcodeResult, String> {
-    let Ok(result) = rxing::helpers::detect_in_luma_with_hints(data, width, height, None, hints.get_dictionary_mut()) else {
-            return Err("not found".to_owned());
-        };
+    let Ok(result) = rxing::helpers::detect_in_luma_with_hints(
+        data,
+        width,
+        height,
+        None,
+        hints.get_dictionary_mut(),
+    ) else {
+        return Err("not found".to_owned());
+    };
     Ok(result.into())
 }
 
@@ -365,13 +383,16 @@ pub struct MultiDecodeResult {
 impl MultiDecodeResult {
     #[wasm_bindgen(constructor)]
     pub fn new() -> MultiDecodeResult {
-        MultiDecodeResult { pointer: 0, results: Vec::default() }
+        MultiDecodeResult {
+            pointer: 0,
+            results: Vec::default(),
+        }
     }
 
     fn with_results(results: Vec<BarcodeResult>) -> MultiDecodeResult {
         MultiDecodeResult {
             pointer: 0,
-            results
+            results,
         }
     }
 
@@ -391,10 +412,15 @@ pub fn decode_multi(
     height: u32,
     hints: &mut decode_hints::DecodeHintDictionary,
 ) -> Result<MultiDecodeResult, String> {
-    let Ok(results) = rxing::helpers::detect_multiple_in_luma_with_hints(data, width, height, hints.get_dictionary_mut()) else {
+    let Ok(results) = rxing::helpers::detect_multiple_in_luma_with_hints(
+        data,
+        width,
+        height,
+        hints.get_dictionary_mut(),
+    ) else {
         return Err("not found".to_owned());
     };
     Ok(MultiDecodeResult::with_results(
-         results.into_iter().map(|r| r.into()).collect()
+        results.into_iter().map(|r| r.into()).collect(),
     ))
 }

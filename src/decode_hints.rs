@@ -126,6 +126,7 @@ impl DecodeHintDictionary {
                 | rxing::DecodeHintValue::AssumeGs1(val)
                 | rxing::DecodeHintValue::ReturnCodabarStartEnd(val)
                 | rxing::DecodeHintValue::TryHarder(val)
+                | rxing::DecodeHintValue::TelepenAsNumeric(val)
                 | rxing::DecodeHintValue::AlsoInverted(val) => val.to_string(),
 
                 rxing::DecodeHintValue::PossibleFormats(val) => val
@@ -154,7 +155,7 @@ impl DecodeHintDictionary {
                     .insert(hint.into(), rxing::DecodeHintValue::Other(value));
             }
             DecodeHintTypes::PureBarcode => {
-                let Ok(pure_barcode) =  value.parse() else {
+                let Ok(pure_barcode) = value.parse() else {
                     return false;
                 };
                 self.0.insert(
@@ -175,7 +176,7 @@ impl DecodeHintDictionary {
                 );
             }
             DecodeHintTypes::TryHarder => {
-                let Ok(try_harder) =  value.parse() else {
+                let Ok(try_harder) = value.parse() else {
                     return false;
                 };
                 self.0
@@ -192,7 +193,7 @@ impl DecodeHintDictionary {
                     .insert(hint.into(), rxing::DecodeHintValue::AllowedLengths(lengths));
             }
             DecodeHintTypes::AssumeCode39CheckDigit => {
-                let Ok(assume_code_39_check_digit) =  value.parse() else {
+                let Ok(assume_code_39_check_digit) = value.parse() else {
                     return false;
                 };
                 self.0.insert(
@@ -201,14 +202,14 @@ impl DecodeHintDictionary {
                 );
             }
             DecodeHintTypes::AssumeGs1 => {
-                let Ok(assume_gs1) =  value.parse() else {
+                let Ok(assume_gs1) = value.parse() else {
                     return false;
                 };
                 self.0
                     .insert(hint.into(), rxing::DecodeHintValue::AssumeGs1(assume_gs1));
             }
             DecodeHintTypes::ReturnCodabarStartEnd => {
-                let Ok(return_codebar_start_end) =  value.parse() else {
+                let Ok(return_codebar_start_end) = value.parse() else {
                     return false;
                 };
                 self.0.insert(
@@ -228,7 +229,7 @@ impl DecodeHintDictionary {
                 );
             }
             DecodeHintTypes::AlsoInverted => {
-                let Ok(also_inverted) =  value.parse() else {
+                let Ok(also_inverted) = value.parse() else {
                     return false;
                 };
                 self.0.insert(
