@@ -77,7 +77,6 @@ pub enum DecodeHintTypes {
      */
     AlsoInverted,
 
-
     /**
      * Translate the ASCII values parsed by the Telepen reader into the Telepen Numeric form; use {@link Boolean#TRUE}.
      */
@@ -248,8 +247,10 @@ impl DecodeHintDictionary {
                 let Ok(telepen_as_numeric) = value.parse() else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::DecodeHintValue::TelepenAsNumeric(telepen_as_numeric));
+                self.0.insert(
+                    hint.into(),
+                    rxing::DecodeHintValue::TelepenAsNumeric(telepen_as_numeric),
+                );
             }
         }
         true
