@@ -102,5 +102,17 @@ pub fn decode_multi(
 ) -> Result<MultiDecodeResult, String>;
 ```
 
+```rust
+pub fn encode_barcode_with_hints(
+    data: &str,
+    width: u32,
+    height: u32,
+    bc_type: BarcodeFormat,
+    hints: &mut EncodeHintDictionary,
+) -> Result<String, String>;
+```
+
 ## Beta Features
 `decode_multi` is currently in beta. The output may be unexpected, or undefined. Please use with caution. The interface may be unstable, and change.
+
+`encode_barcode_with_hints` is currently in alpha. The output and behaviour is unexpected and poorly documented. Use at your own risk, feature may change, unstable interface.

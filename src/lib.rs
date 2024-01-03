@@ -1,8 +1,10 @@
 #[cfg(feature = "decode_hints")]
 mod decode_hints;
+mod encode_hints;
 
 use std::collections::HashMap;
 
+use encode_hints::EncodeHintDictionary;
 use rxing::{self, ResultPoint};
 use rxing::{Reader, Writer};
 use wasm_bindgen::prelude::*;
@@ -259,6 +261,28 @@ pub fn encode_barcode(
         width as i32,
         height as i32,
         &std::collections::HashMap::new(),
+    ) else {
+        return Err("couldn't encode".to_owned());
+    };
+    Ok(bit_matrix.to_string())
+}
+
+#[wasm_bindgen]
+/// Encode a barcode with the given data, dimensions, and type, use the given encoding hints
+pub fn encode_barcode_with_hints(
+    data: &str,
+    width: u32,
+    height: u32,
+    bc_type: BarcodeFormat,
+    hints: &mut EncodeHintDictionary,
+) -> Result<String, String> {
+    let writer = rxing::MultiFormatWriter::default();
+    let Ok(bit_matrix) = writer.encode_with_hints(
+        data,
+        &bc_type.into(),
+        width as i32,
+        height as i32,
+        hints.get_dictionary_mut(),
     ) else {
         return Err("couldn't encode".to_owned());
     };
