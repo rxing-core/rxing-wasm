@@ -76,6 +76,12 @@ pub enum DecodeHintTypes {
      * second time with an inverted image. Doesn't matter what it maps to; use {@link Boolean#TRUE}.
      */
     AlsoInverted,
+
+
+    /**
+     * Translate the ASCII values parsed by the Telepen reader into the Telepen Numeric form; use {@link Boolean#TRUE}.
+     */
+    TelepenAsNumeric,
 }
 
 impl From<DecodeHintTypes> for rxing::DecodeHintType {
@@ -99,6 +105,7 @@ impl From<DecodeHintTypes> for rxing::DecodeHintType {
             }
             DecodeHintTypes::AllowedEanExtensions => rxing::DecodeHintType::ALLOWED_EAN_EXTENSIONS,
             DecodeHintTypes::AlsoInverted => rxing::DecodeHintType::ALSO_INVERTED,
+            DecodeHintTypes::TelepenAsNumeric => rxing::DecodeHintType::TELEPEN_AS_NUMERIC,
         }
     }
 }
@@ -236,6 +243,13 @@ impl DecodeHintDictionary {
                     hint.into(),
                     rxing::DecodeHintValue::AlsoInverted(also_inverted),
                 );
+            }
+            DecodeHintTypes::TelepenAsNumeric => {
+                let Ok(telepen_as_numeric) = value.parse() else {
+                    return false;
+                };
+                self.0
+                    .insert(hint.into(), rxing::DecodeHintValue::TelepenAsNumeric(telepen_as_numeric));
             }
         }
         true

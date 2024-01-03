@@ -1,7 +1,7 @@
 import { convert_js_image_to_luma, decode_barcode_with_hints, DecodeHintDictionary, DecodeHintTypes, BarcodeFormat } from "rxing-wasm";
 
 const text_hints = ["Other", "PossibleFormats", "CharacterSet", "AllowedLengths", "AllowedEanExtensions"];
-const bool_hints = ["PureBarcode", "TryHarder", "AssumeCode39CheckDigit", "ReturnCodabarStartEnd", "AssumeGs1", "AlsoInverted"]
+const bool_hints = ["PureBarcode", "TryHarder", "AssumeCode39CheckDigit", "ReturnCodabarStartEnd", "AssumeGs1", "AlsoInverted", "TelepenAsNumeric"]
 
 const scan_btn = document.getElementById('scan_btn');
 const input = document.getElementById('image_file_input');
