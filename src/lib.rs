@@ -68,6 +68,8 @@ pub enum BarcodeFormat {
 
     Telepen,
 
+    RectangularMicroQR,
+
     ///
     UnsuportedFormat,
 }
@@ -95,6 +97,8 @@ impl From<BarcodeFormat> for rxing::BarcodeFormat {
             BarcodeFormat::MicroQR => rxing::BarcodeFormat::MICRO_QR_CODE,
             BarcodeFormat::UnsuportedFormat => rxing::BarcodeFormat::UNSUPORTED_FORMAT,
             BarcodeFormat::Telepen => rxing::BarcodeFormat::TELEPEN,
+            BarcodeFormat::RectangularMicroQR => rxing::BarcodeFormat::RECTANGULAR_MICRO_QR_CODE,
+            
         }
     }
 }
@@ -122,6 +126,7 @@ impl From<rxing::BarcodeFormat> for BarcodeFormat {
             rxing::BarcodeFormat::MICRO_QR_CODE => BarcodeFormat::MicroQR,
             rxing::BarcodeFormat::UNSUPORTED_FORMAT => BarcodeFormat::UnsuportedFormat,
             rxing::BarcodeFormat::TELEPEN => BarcodeFormat::Telepen,
+            rxing::BarcodeFormat::RECTANGULAR_MICRO_QR_CODE => BarcodeFormat::RectangularMicroQR,
         }
     }
 }
