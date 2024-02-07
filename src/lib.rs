@@ -325,7 +325,7 @@ pub fn decode_barcode(
 /// Such an object could be obtained using the `getImageData`
 /// method of a `CanvasRenderingContext2D` object.
 pub fn convert_js_image_to_luma(data: &[u8]) -> Vec<u8> {
-    let mut luma_data = Vec::new();
+    let mut luma_data = Vec::with_capacity(data.len() / 4);
     for src_pixel in data.chunks_exact(4) {
         let [red, green, blue, alpha] = src_pixel else {
             continue;
