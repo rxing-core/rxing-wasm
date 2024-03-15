@@ -30,10 +30,11 @@ function onClickScan() {
     const context = canvas.getContext('2d');
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const luma_data = convert_js_image_to_luma(imageData.data);
+    const filter_image = document.getElementById("FilterInput").checked;
     const hints = getHints();
     let result;
     try {
-        result = decode_barcode_with_hints(luma_data, canvas.width, canvas.height, hints);
+        result = decode_barcode_with_hints(luma_data, canvas.width, canvas.height, hints, filter_image);
     } catch (e) {
         alert("Issue decoding: " + e);
     }

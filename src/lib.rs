@@ -98,7 +98,6 @@ impl From<BarcodeFormat> for rxing::BarcodeFormat {
             BarcodeFormat::UnsuportedFormat => rxing::BarcodeFormat::UNSUPORTED_FORMAT,
             BarcodeFormat::Telepen => rxing::BarcodeFormat::TELEPEN,
             BarcodeFormat::RectangularMicroQR => rxing::BarcodeFormat::RECTANGULAR_MICRO_QR_CODE,
-            
         }
     }
 }
@@ -127,6 +126,7 @@ impl From<rxing::BarcodeFormat> for BarcodeFormat {
             rxing::BarcodeFormat::UNSUPORTED_FORMAT => BarcodeFormat::UnsuportedFormat,
             rxing::BarcodeFormat::TELEPEN => BarcodeFormat::Telepen,
             rxing::BarcodeFormat::RECTANGULAR_MICRO_QR_CODE => BarcodeFormat::RectangularMicroQR,
+            _ => BarcodeFormat::UnsuportedFormat,
         }
     }
 }
@@ -301,6 +301,7 @@ pub fn decode_barcode(
     width: u32,
     height: u32,
     try_harder: Option<bool>,
+    filter_image: Option<bool>,
 ) -> Result<BarcodeResult, String> {
     let mut hints: rxing::DecodingHintDictionary = HashMap::new();
     if let Some(true) = try_harder {
@@ -309,8 +310,15 @@ pub fn decode_barcode(
             rxing::DecodeHintValue::TryHarder(true),
         );
     }
-    let Ok(result) =
-        rxing::helpers::detect_in_luma_with_hints(data, width, height, None, &mut hints)
+
+    let detection_function = if matches!(filter_image, Some(true)) {
+        rxing::helpers::detect_in_luma_filtered_with_hints
+    }else {
+        rxing::helpers::detect_in_luma_with_hints
+    };
+
+    let Ok(result) = 
+        detection_function(data, width, height, None, &mut hints)
     else {
         return Err("not found".to_owned());
     };
@@ -364,6 +372,7 @@ pub fn decode_barcode_rgb(
             rxing::DecodeHintValue::TryHarder(true),
         );
     }
+
     let mut multi_format_reader = rxing::MultiFormatReader::default();
 
     let Ok(result) = multi_format_reader.decode_with_hints(
@@ -389,14 +398,28 @@ pub fn decode_barcode_with_hints(
     width: u32,
     height: u32,
     hints: &mut decode_hints::DecodeHintDictionary,
+    filter_image: Option<bool>, 
 ) -> Result<BarcodeResult, String> {
-    let Ok(result) = rxing::helpers::detect_in_luma_with_hints(
-        data,
-        width,
-        height,
-        None,
-        hints.get_dictionary_mut(),
-    ) else {
+
+    let results = if matches!(filter_image, Some(true)) {
+        rxing::helpers::detect_in_luma_filtered_with_hints(
+            data,
+            width,
+            height,
+            None,
+            hints.get_dictionary_mut(),
+        )
+    }else {
+        rxing::helpers::detect_in_luma_with_hints(
+            data,
+            width,
+            height,
+            None,
+            hints.get_dictionary_mut(),
+        )
+    };
+    
+    let Ok(result) = results else {
         return Err("not found".to_owned());
     };
     Ok(result.into())
