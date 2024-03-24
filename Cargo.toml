@@ -1,6 +1,6 @@
 [package]
 name = "rxing-wasm"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2021"
 description = "wasm bindings for rxing to provide commong barcode operations (decode/encode)"
 repository = "https://github.com/rxing-core/rxing-wasm"
@@ -16,8 +16,8 @@ decode_hints = []
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wasm-bindgen = "0.2.84"
-js-sys = "0.3.61"
+wasm-bindgen = "0.2.92"
+js-sys = "0.3.69"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -25,7 +25,7 @@ js-sys = "0.3.61"
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.6", optional = true }
 
-rxing = {version = "~0.5.8", default-features = false, features = ["wasm_support"]}
+rxing = {version = "~0.5.9", default-features = false, features = ["wasm_support"]}
 #rxing = {path="../rxing", version = "~0.2.23", default-features = false, features = ["wasm_support"]}
 
 [dev-dependencies]
