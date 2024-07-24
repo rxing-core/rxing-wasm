@@ -199,6 +199,8 @@ fn get_result_metadata_name(mdtn: &rxing::RXingResultMetadataType) -> String {
         rxing::RXingResultMetadataType::IS_MIRRORED => "Is_Mirrored",
         rxing::RXingResultMetadataType::CONTENT_TYPE => "Content_Type",
         rxing::RXingResultMetadataType::IS_INVERTED => "Is_Inverted",
+        rxing::RXingResultMetadataType::FILTERED_CLOSED => "Filtered_Is_Closed",
+        rxing::RXingResultMetadataType::FILTERED_RESOLUTION => "Filtered_Found_Resolution",
     }
     .to_owned()
 }
@@ -224,6 +226,8 @@ fn get_result_metadata_value(res_mdt_val: &rxing::RXingResultMetadataValue) -> S
 
         rxing::RXingResultMetadataValue::IsMirrored(v) => v.to_string(),
         rxing::RXingResultMetadataValue::IsInverted(v) => v.to_string(),
+        rxing::RXingResultMetadataValue::FilteredClosed(v) => v.to_string(),
+        rxing::RXingResultMetadataValue::FilteredResolution(v) => format!("{v:?}"),
     }
 }
 
