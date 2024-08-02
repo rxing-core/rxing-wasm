@@ -1,6 +1,10 @@
 # rxing-wasm
 WASM bindings for common rxing functions. The NPM link is [https://www.npmjs.com/package/rxing-wasm](https://www.npmjs.com/package/rxing-wasm) and the rust source is [https://github.com/rxing-core/rxing-wasm](https://github.com/hschimke/rxing-wasm).
 
+## Decode Multi Breaking Change with v0.3.0
+Version `0.3.0` now returns `BarcodeResult` objects in a native javascript array. This fully deprecates the old method
+which returned a custom object with internal state.
+
 ## Data
 The `convert_js_image_to_luma` function is used to convert canvas image data to the luma 8
 format that rxing expects. An example might look like to below.
@@ -99,7 +103,8 @@ pub fn decode_multi(
     width: u32,
     height: u32,
     hints: &mut decode_hints::DecodeHintDictionary,
-) -> Result<MultiDecodeResult, String>;
+    filter_image: Option<bool>,
+) -> Result<Vec<BarcodeResult>, String>;
 ```
 
 ```rust
@@ -113,6 +118,4 @@ pub fn encode_barcode_with_hints(
 ```
 
 ## Beta Features
-`decode_multi` is currently in beta. The output may be unexpected, or undefined. Please use with caution. The interface may be unstable, and change.
-
 `encode_barcode_with_hints` is currently in alpha. The output and behaviour is unexpected and poorly documented. Use at your own risk, feature may change, unstable interface.

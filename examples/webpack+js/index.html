@@ -19,7 +19,8 @@
         <label for="FilterInput">FilterInput:</label><input type="checkbox" name="FilterInput" id="FilterInput" />
         <label for="PossibleFormats">PossibleFormats:</label><input type="text" name="PossibleFormats"
           id="PossibleFormats" />
-        <label for="TryHarder">TryHarder:</label><input type="checkbox" name="TryHarder" id="TryHarder" checked="true" />
+        <label for="TryHarder">TryHarder:</label><input type="checkbox" name="TryHarder" id="TryHarder"
+          checked="true" />
         <label for="CharacterSet">CharacterSet:</label><input type="text" name="CharacterSet" id="CharacterSet" />
         <label for="AllowedLengths">AllowedLengths:</label><input type="text" name="AllowedLengths"
           id="AllowedLengths" />
@@ -32,33 +33,15 @@
         <label for="AllowedEanExtensions">AllowedEanExtensions:</label><input type="text" name="AllowedEanExtensions"
           id="AllowedEanExtensions" />
         <label for="AlsoInverted">AlsoInverted:</label><input type="checkbox" name="AlsoInverted" id="AlsoInverted" />
-        <label for="TelepenAsNumeric">TelepenAsNumeric:</label><input type="checkbox" name="TelepenAsNumeric" id="TelepenAsNumeric" />
+        <label for="TelepenAsNumeric">TelepenAsNumeric:</label><input type="checkbox" name="TelepenAsNumeric"
+          id="TelepenAsNumeric" />
       </div>
       <input type="file" id="image_file_input" />
-      <button id="scan_btn" disabled="true">Scan</button>
-      
-      <table id="output" hidden="true">
-        <tr>
-          <td class="field">Text</td>
-          <td class="data" id="text_result_td"></td>
-        </tr>
-        <tr>
-          <td class="field">Format</td>
-          <td class="data" id="format_result_td"></td>
-        </tr>
-        <!--<tr>
-          <td class="field">Points</td>
-          <td class="data" id="points_result_td"></td>
-        </tr>-->
-        <tr>
-          <td class="field">Raw Bytes</td>
-          <td class="data" id="raw_bytes_result_td"></td>
-        </tr>
-        <tr>
-          <td class="field">Meta Data:</td>
-          <td class="data" id="medata_data_result_td"></td>
-        </tr>
-      </table>
+      <button id="scan_btn" disabled="true">Single</button>
+      <button id="scan_multi" disabled="true">Multiple</button>
+
+      <div id="output_container">
+      </div>
     </div>
 
     <canvas id="cvs"></canvas>
@@ -66,7 +49,61 @@
 
 </body>
 
+<template id="result-element-template">
+  <style>
+    table {
+      margin-top: 2em;
+      width: 75%;
+      border: 1px solid black;
+    }
+
+    td {
+      padding-top: .5em;
+    }
+
+    .field {
+      width: 10%;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .data {
+      width: 90%;
+    }
+  </style>
+
+  <table class="scan-result">
+    <tr>
+      <td class="field">Text</td>
+      <td class="data">
+        <slot name="text_result"></slot>
+      </td>
+    </tr>
+    <tr>
+      <td class="field">Format</td>
+      <td class="data">
+        <slot name="format_result"></slot>
+      </td>
+    </tr>
+    <!--<tr>
+      <td class="field">Points</td>
+      <td class="data"><slot name="points_result_td"></slot></td>
+    </tr>-->
+    <tr>
+      <td class="field">Raw Bytes</td>
+      <td class="data">
+        <slot name="raw_bytes_result"></slot>
+      </td>
+    </tr>
+    <tr>
+      <td class="field">Meta Data:</td>
+      <td class="data">
+        <slot name="medata_data_result"></slot>
+      </td>
+    </tr>
+  </table>
+</template>
+
 </html>
 
 <!-- Copyright 2023 Henry Schimke -->
-<!-- Using rxing-wasm v0.2.11 -->
+<!-- Using rxing-wasm v0.3.0 -->

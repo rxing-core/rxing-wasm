@@ -1,5 +1,5 @@
 use rxing::{datamatrix::encoder::SymbolShapeHint, Dimension};
-use std::collections::{HashMap};
+use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

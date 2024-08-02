@@ -9,20 +9,6 @@
     grid-template-columns: 1fr 1.5fr;
 }
 
-#output {
-    padding-top: 2em;
-    width: 75%;
-}
-
-#output td {
-    padding-top: .5em;
-}
-
-#output .field {
-    width: 10%;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-#output .data {
-    width: 90%;
+#cvs {
+    width: 100%;
 }

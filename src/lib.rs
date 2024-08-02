@@ -317,13 +317,11 @@ pub fn decode_barcode(
 
     let detection_function = if matches!(filter_image, Some(true)) {
         rxing::helpers::detect_in_luma_filtered_with_hints
-    }else {
+    } else {
         rxing::helpers::detect_in_luma_with_hints
     };
 
-    let Ok(result) = 
-        detection_function(data, width, height, None, &mut hints)
-    else {
+    let Ok(result) = detection_function(data, width, height, None, &mut hints) else {
         return Err("not found".to_owned());
     };
     Ok(result.into())
@@ -402,9 +400,8 @@ pub fn decode_barcode_with_hints(
     width: u32,
     height: u32,
     hints: &mut decode_hints::DecodeHintDictionary,
-    filter_image: Option<bool>, 
+    filter_image: Option<bool>,
 ) -> Result<BarcodeResult, String> {
-
     let results = if matches!(filter_image, Some(true)) {
         rxing::helpers::detect_in_luma_filtered_with_hints(
             data,
@@ -413,7 +410,7 @@ pub fn decode_barcode_with_hints(
             None,
             hints.get_dictionary_mut(),
         )
-    }else {
+    } else {
         rxing::helpers::detect_in_luma_with_hints(
             data,
             width,
@@ -422,42 +419,11 @@ pub fn decode_barcode_with_hints(
             hints.get_dictionary_mut(),
         )
     };
-    
+
     let Ok(result) = results else {
         return Err("not found".to_owned());
     };
     Ok(result.into())
-}
-
-#[wasm_bindgen]
-pub struct MultiDecodeResult {
-    pointer: usize,
-    results: Vec<BarcodeResult>,
-}
-
-#[wasm_bindgen]
-impl MultiDecodeResult {
-    #[wasm_bindgen(constructor)]
-    pub fn new() -> MultiDecodeResult {
-        MultiDecodeResult {
-            pointer: 0,
-            results: Vec::default(),
-        }
-    }
-
-    fn with_results(results: Vec<BarcodeResult>) -> MultiDecodeResult {
-        MultiDecodeResult {
-            pointer: 0,
-            results,
-        }
-    }
-
-    #[wasm_bindgen]
-    pub fn next(&mut self) -> Option<BarcodeResult> {
-        let ret = self.results.get(self.pointer).map(|b| b.clone());
-        self.pointer += 1;
-        ret
-    }
 }
 
 #[cfg(feature = "decode_hints")]
@@ -467,16 +433,37 @@ pub fn decode_multi(
     width: u32,
     height: u32,
     hints: &mut decode_hints::DecodeHintDictionary,
-) -> Result<MultiDecodeResult, String> {
-    let Ok(results) = rxing::helpers::detect_multiple_in_luma_with_hints(
-        data,
-        width,
-        height,
-        hints.get_dictionary_mut(),
-    ) else {
-        return Err("not found".to_owned());
+    filter_image: Option<bool>,
+) -> Result<Vec<BarcodeResult>, String> {
+    use rxing::{
+        common::HybridBinarizer,
+        multi::{GenericMultipleBarcodeReader, MultipleBarcodeReader},
+        BinaryBitmap, FilteredImageReader, Luma8LuminanceSource, MultiFormatReader, RXingResult,
     };
-    Ok(MultiDecodeResult::with_results(
-        results.into_iter().map(|r| r.into()).collect(),
-    ))
+
+    let result = if matches!(filter_image, Some(true)) {
+        let mut reader = GenericMultipleBarcodeReader::new(FilteredImageReader::new(
+            MultiFormatReader::default(),
+        ));
+
+        reader.decode_multiple_with_hints(
+            &mut BinaryBitmap::new(HybridBinarizer::new(Luma8LuminanceSource::new(
+                data, width, height,
+            ))),
+            &hints.get_dictionary_mut(),
+        )
+    } else {
+        rxing::helpers::detect_multiple_in_luma_with_hints(
+            data,
+            width,
+            height,
+            hints.get_dictionary_mut(),
+        )
+    };
+    result
+        .map(|value| {
+            let r: Vec<BarcodeResult> = value.into_iter().map(|v| v.into()).collect();
+            r
+        })
+        .map_err(|err| err.to_string())
 }
