@@ -19,6 +19,9 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
   },
+  "engines" : { 
+    "node" : ">=18.0.0"
+  },
   "dependencies": {
     "rxing-wasm": "0.3.1"
   }
