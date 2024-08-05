@@ -358,6 +358,25 @@ pub fn convert_js_image_to_luma(data: &[u8]) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
+pub fn convert_canvas_to_luma(
+    canvas: &web_sys::HtmlCanvasElement,
+) -> Result<Vec<u8>, wasm_bindgen::JsValue> {
+    let context = canvas
+        .get_context("2d")?
+        .ok_or(JsValue::from_str("no context available"))?
+        .dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+    let image_data =
+        context.get_image_data(0.0, 0.0, canvas.width() as f64, canvas.height() as f64)?;
+    let data = convert_imagedata_to_luma(&image_data);
+    Ok(data)
+}
+
+#[wasm_bindgen]
+pub fn convert_imagedata_to_luma(image_data: &web_sys::ImageData) -> Vec<u8> {
+    convert_js_image_to_luma(&image_data.data())
+}
+
+#[wasm_bindgen]
 /// Decode a barcode from an array of rgba data.
 /// Pixel data is in the form of:
 ///     Each pixel is one u32, [r,g,b].

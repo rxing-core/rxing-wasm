@@ -13,13 +13,13 @@
   "author": "Henry Schimke",
   "license": "(MIT OR Apache-2.0)",
   "devDependencies": {
-    "compression-webpack-plugin": "^10.0.0",
-    "copy-webpack-plugin": "^11.0.0",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "compression-webpack-plugin": "^11.1.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "rxing-wasm": "0.3.0"
+    "rxing-wasm": "0.3.1"
   }
 }

@@ -1,4 +1,4 @@
-import { convert_js_image_to_luma, decode_barcode_with_hints, decode_multi, DecodeHintDictionary, DecodeHintTypes, BarcodeFormat } from "rxing-wasm";
+import { convert_js_image_to_luma, convert_canvas_to_luma, decode_barcode_with_hints, decode_multi, DecodeHintDictionary, DecodeHintTypes, BarcodeFormat } from "rxing-wasm";
 
 const text_hints = ["Other", "PossibleFormats", "CharacterSet", "AllowedLengths", "AllowedEanExtensions"];
 const bool_hints = ["PureBarcode", "TryHarder", "AssumeCode39CheckDigit", "ReturnCodabarStartEnd", "AssumeGs1", "AlsoInverted", "TelepenAsNumeric"]
@@ -32,16 +32,24 @@ function handleFiles(e) {
 function onClickScan() {
     output.innerHTML = '';
     const canvas = document.getElementById('cvs');
-    const context = canvas.getContext('2d');
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const luma_data = convert_js_image_to_luma(imageData.data);
+    // const context = canvas.getContext('2d');
+    // const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    // const luma_data = convert_js_image_to_luma(imageData.data);
     const filter_image = document.getElementById("FilterInput").checked;
+    let luma_data;
+    try {
+        luma_data = convert_canvas_to_luma(canvas);
+    } catch (e) {
+        alert("Issue decoding: " + e);
+        return;
+    }
     const hints = getHints();
     let result;
     try {
         result = decode_barcode_with_hints(luma_data, canvas.width, canvas.height, hints, filter_image);
     } catch (e) {
         alert("Issue decoding: " + e);
+        return;
     }
     write_results(result.format(), result.text(), result.raw_bytes(), result.result_points(), result.get_meta_data());
 

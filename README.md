@@ -24,6 +24,37 @@ function decodeBarcode(canvas) {
 }
 ```
 
+The `convert_canvas_to_luma` function is used to convert a canvas to the luma 8
+format that rxing expects. An example might look like to below.
+
+```javascript
+function decodeBarcode(canvas) {
+    let height = canvas.height;
+    let width = canvas.width;
+    let luma8Data = convert_canvas_to_luma(canvas);
+    let parsedBarcode = decode_barcode(luma8Data, width, height);
+    
+    return parsedBarcode;
+}
+```
+
+The `convert_imagedata_to_luma` function is used to convert an ImageData object to the luma 8
+format that rxing expects. An example might look like to below.
+
+```javascript
+function decodeBarcode(canvas) {
+    let context = canvas.getContext('2d');
+    let height = canvas.height;
+    let width = canvas.width;
+    let imageData = context.getImageData(0, 0, width, height);
+
+    let luma8Data = convert_imagedata_to_luma(imageData);
+    let parsedBarcode = decode_barcode(luma8Data, width, height);
+    
+    return parsedBarcode;
+}
+```
+
 ## Hints
 ### Using the `DecodeHintDictionary` class
 Add a hint with `set_hint(hint: DecodeHintTypes, value: string)`. The function returns `true` if the hint was added and `false` if it was not. The value of hint must be a `number` representing on of the enum values for `DecodeHintTypes`. The easiest way to use this is to simply pass in one of the values from `DecodeHintTypes`.
