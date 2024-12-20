@@ -1,6 +1,6 @@
 [package]
 name = "rxing-wasm"
-version = "0.3.2"
+version = "0.3.3"
 edition = "2021"
 description = "wasm bindings for rxing to provide commong barcode operations (decode/encode)"
 repository = "https://github.com/rxing-core/rxing-wasm"
@@ -36,6 +36,7 @@ wasm-bindgen-test = "0.3.34"
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
 lto = "fat"
+strip = true
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = false
