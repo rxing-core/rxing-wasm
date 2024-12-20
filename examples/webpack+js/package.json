@@ -20,7 +20,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "engines": {
-    "node": ">=23.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "rxing-wasm": "^0.3.3"
