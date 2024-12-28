@@ -1,5 +1,4 @@
 use rxing::{datamatrix::encoder::SymbolShapeHint, Dimension, EncodeHints};
-use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

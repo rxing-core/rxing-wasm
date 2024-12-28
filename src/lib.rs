@@ -263,7 +263,7 @@ pub fn encode_barcode(
     height: u32,
     bc_type: BarcodeFormat,
 ) -> Result<String, String> {
-    let writer = rxing::MultiFormatWriter::default();
+    let writer = rxing::MultiFormatWriter;
     let Ok(bit_matrix) = writer.encode_with_hints(
         data,
         &bc_type.into(),
@@ -285,7 +285,7 @@ pub fn encode_barcode_with_hints(
     bc_type: BarcodeFormat,
     hints: &mut EncodeHintDictionary,
 ) -> Result<String, String> {
-    let writer = rxing::MultiFormatWriter::default();
+    let writer = rxing::MultiFormatWriter;
     let Ok(bit_matrix) = writer.encode_with_hints(
         data,
         &bc_type.into(),
@@ -451,7 +451,7 @@ pub fn decode_multi(
     use rxing::{
         common::HybridBinarizer,
         multi::{GenericMultipleBarcodeReader, MultipleBarcodeReader},
-        BinaryBitmap, FilteredImageReader, Luma8LuminanceSource, MultiFormatReader, RXingResult,
+        BinaryBitmap, FilteredImageReader, Luma8LuminanceSource, MultiFormatReader,
     };
 
     let result = if matches!(filter_image, Some(true)) {
@@ -463,7 +463,7 @@ pub fn decode_multi(
             &mut BinaryBitmap::new(HybridBinarizer::new(Luma8LuminanceSource::new(
                 data, width, height,
             ))),
-            &hints.get_dictionary_mut(),
+            hints.get_dictionary_mut(),
         )
     } else {
         rxing::helpers::detect_multiple_in_luma_with_hints(

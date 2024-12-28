@@ -1,5 +1,5 @@
 use rxing::DecodeHints;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
