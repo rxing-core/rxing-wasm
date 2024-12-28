@@ -1,4 +1,4 @@
-use rxing::{datamatrix::encoder::SymbolShapeHint, Dimension};
+use rxing::{datamatrix::encoder::SymbolShapeHint, Dimension, EncodeHints};
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
@@ -189,59 +189,193 @@ impl From<EncodeHintTypes> for rxing::EncodeHintType {
 
 #[wasm_bindgen]
 #[derive(Default)]
-pub struct EncodeHintDictionary(HashMap<rxing::EncodeHintType, rxing::EncodeHintValue>);
+pub struct EncodeHintDictionary(EncodeHints);
 
 #[wasm_bindgen]
 impl EncodeHintDictionary {
     #[wasm_bindgen(constructor)]
     pub fn new() -> EncodeHintDictionary {
-        EncodeHintDictionary(HashMap::new())
+        EncodeHintDictionary(EncodeHints::default())
     }
 
     #[wasm_bindgen]
     pub fn get_hint(&self, hint: EncodeHintTypes) -> String {
-        if let Some(val) = self.0.get(&hint.into()) {
-            match val {
-                rxing::EncodeHintValue::ErrorCorrection(val)
-                | rxing::EncodeHintValue::CharacterSet(val)
-                | rxing::EncodeHintValue::Margin(val)
-                | rxing::EncodeHintValue::Pdf417Compact(val)
-                | rxing::EncodeHintValue::Pdf417Compaction(val)
-                | rxing::EncodeHintValue::Pdf417AutoEci(val)
-                | rxing::EncodeHintValue::QrVersion(val)
-                | rxing::EncodeHintValue::QrMaskPattern(val)
-                | rxing::EncodeHintValue::QrCompact(val)
-                | rxing::EncodeHintValue::ForceCodeSet(val) => val.to_owned(),
-
-                rxing::EncodeHintValue::DataMatrixCompact(val)
-                | rxing::EncodeHintValue::Gs1Format(val)
-                | rxing::EncodeHintValue::ForceC40(val)
-                | rxing::EncodeHintValue::Code128Compact(val)
-                | rxing::EncodeHintValue::TelepenAsNumeric(val) => val.to_string(),
-
-                rxing::EncodeHintValue::AztecLayers(val) => val.to_string(),
-
-                rxing::EncodeHintValue::DataMatrixShape(val) => match val {
+        match hint {
+            EncodeHintTypes::ErrorCorrection => self
+                .0
+                .ErrorCorrection
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::CharacterSet => self
+                .0
+                .CharacterSet
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::DataMatrixShape => self
+                .0
+                .DataMatrixShape
+                .as_ref()
+                .map(|v| match v {
                     SymbolShapeHint::FORCE_NONE => "ForceNone".to_owned(),
                     SymbolShapeHint::FORCE_RECTANGLE => "ForceRectangle".to_owned(),
                     SymbolShapeHint::FORCE_SQUARE => "ForceSquare".to_owned(),
-                },
-
-                rxing::EncodeHintValue::MinSize(val) | rxing::EncodeHintValue::MaxSize(val) => {
-                    val.to_string()
-                }
-                rxing::EncodeHintValue::Pdf417Dimensions(val) => format!(
-                    "{}/{}||{}/{}",
-                    val.getMinCols(),
-                    val.getMaxCols(),
-                    val.getMinRows(),
-                    val.getMaxRows()
-                ),
-            }
-        } else {
-            String::from("")
+                })
+                .unwrap_or_default(),
+            EncodeHintTypes::DataMatrixCompact => self
+                .0
+                .DataMatrixCompact
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::MinSize => self
+                .0
+                .MinSize
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::MaxSize => self
+                .0
+                .MaxSize
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::MARGIN => self
+                .0
+                .Margin
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::Pdf417Compact => self
+                .0
+                .Pdf417Compact
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::Pdf417Compaction => self
+                .0
+                .Pdf417Compaction
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::Pdf417Dimensions => self
+                .0
+                .Pdf417Dimensions
+                .as_ref()
+                .map(|v| {
+                    format!(
+                        "{}/{}||{}/{}",
+                        v.getMinCols(),
+                        v.getMaxCols(),
+                        v.getMinRows(),
+                        v.getMaxRows()
+                    )
+                })
+                .unwrap_or_default(),
+            EncodeHintTypes::Pdf417AutoEci => self
+                .0
+                .Pdf417AutoEci
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::AztecLayers => self
+                .0
+                .AztecLayers
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::QrVersion => self
+                .0
+                .QrVersion
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::QrMaskPattern => self
+                .0
+                .QrMaskPattern
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::QrCompact => self
+                .0
+                .QrCompact
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::Gs1Format => self
+                .0
+                .Gs1Format
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::ForceCodeSet => self
+                .0
+                .ForceCodeSet
+                .as_ref()
+                .map(|v| v.to_owned())
+                .unwrap_or_default(),
+            EncodeHintTypes::ForceC40 => self
+                .0
+                .ForceC40
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::Code128Compact => self
+                .0
+                .Code128Compact
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
+            EncodeHintTypes::TelepenAsNumeric => self
+                .0
+                .TelepenAsNumeric
+                .as_ref()
+                .map(|v| v.to_string())
+                .unwrap_or_default(),
         }
     }
+    // if let Some(val) = self.0.get(&hint.into()) {
+    //     match val {
+    //         rxing::EncodeHintValue::ErrorCorrection(val)
+    //         | rxing::EncodeHintValue::CharacterSet(val)
+    //         | rxing::EncodeHintValue::Margin(val)
+    //         | rxing::EncodeHintValue::Pdf417Compact(val)
+    //         | rxing::EncodeHintValue::Pdf417Compaction(val)
+    //         | rxing::EncodeHintValue::Pdf417AutoEci(val)
+    //         | rxing::EncodeHintValue::QrVersion(val)
+    //         | rxing::EncodeHintValue::QrMaskPattern(val)
+    //         | rxing::EncodeHintValue::QrCompact(val)
+    //         | rxing::EncodeHintValue::ForceCodeSet(val) => val.to_owned(),
+
+    //         rxing::EncodeHintValue::DataMatrixCompact(val)
+    //         | rxing::EncodeHintValue::Gs1Format(val)
+    //         | rxing::EncodeHintValue::ForceC40(val)
+    //         | rxing::EncodeHintValue::Code128Compact(val)
+    //         | rxing::EncodeHintValue::TelepenAsNumeric(val) => val.to_string(),
+
+    //         rxing::EncodeHintValue::AztecLayers(val) => val.to_string(),
+
+    //         rxing::EncodeHintValue::DataMatrixShape(val) => match val {
+    //             SymbolShapeHint::FORCE_NONE => "ForceNone".to_owned(),
+    //             SymbolShapeHint::FORCE_RECTANGLE => "ForceRectangle".to_owned(),
+    //             SymbolShapeHint::FORCE_SQUARE => "ForceSquare".to_owned(),
+    //         },
+
+    //         rxing::EncodeHintValue::MinSize(val) | rxing::EncodeHintValue::MaxSize(val) => {
+    //             val.to_string()
+    //         }
+    //         rxing::EncodeHintValue::Pdf417Dimensions(val) => format!(
+    //             "{}/{}||{}/{}",
+    //             val.getMinCols(),
+    //             val.getMaxCols(),
+    //             val.getMinRows(),
+    //             val.getMaxRows()
+    //         ),
+    //     }
+    // } else {
+    //     String::from("")
+    // }
 
     #[wasm_bindgen]
     pub fn set_hint(&mut self, hint: EncodeHintTypes, value: String) -> bool {
@@ -251,12 +385,10 @@ impl EncodeHintDictionary {
 
         match hint {
             EncodeHintTypes::ErrorCorrection => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::ErrorCorrection(value));
+                self.0.ErrorCorrection = Some(value);
             }
             EncodeHintTypes::CharacterSet => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::CharacterSet(value));
+                self.0.CharacterSet = Some(value);
             }
             EncodeHintTypes::DataMatrixShape => {
                 let shape_hint = match value.as_str() {
@@ -267,111 +399,85 @@ impl EncodeHintDictionary {
                         return false;
                     }
                 };
-                self.0.insert(
-                    hint.into(),
-                    rxing::EncodeHintValue::DataMatrixShape(shape_hint),
-                );
+                self.0.DataMatrixShape = Some(shape_hint);
             }
             EncodeHintTypes::DataMatrixCompact => {
                 let Ok(parsed_bool) = value.parse() else {
                     return false;
                 };
-                self.0.insert(
-                    hint.into(),
-                    rxing::EncodeHintValue::DataMatrixCompact(parsed_bool),
-                );
+                self.0.DataMatrixCompact = Some(parsed_bool);
             }
             EncodeHintTypes::MinSize => {
                 let Some(dim) = parse_dimension(&value) else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::MinSize(dim));
+                self.0.MinSize = Some(dim);
             }
             EncodeHintTypes::MaxSize => {
                 let Some(dim) = parse_dimension(&value) else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::MaxSize(dim));
+                self.0.MaxSize = Some(dim);
             }
             EncodeHintTypes::MARGIN => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::Margin(value));
+                self.0.Margin = Some(value);
             }
             EncodeHintTypes::Pdf417Compact => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::Pdf417Compact(value));
+                self.0.Pdf417Compact = Some(value);
             }
             EncodeHintTypes::Pdf417Compaction => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::Pdf417Compaction(value));
+                self.0.Pdf417Compaction = Some(value);
             }
             EncodeHintTypes::Pdf417Dimensions => {
                 let Some(dim) = parse_dimensions(&value) else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::Pdf417Dimensions(dim));
+                self.0.Pdf417Dimensions = Some(dim);
             }
             EncodeHintTypes::Pdf417AutoEci => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::Pdf417AutoEci(value));
+                self.0.Pdf417AutoEci = Some(value);
             }
             EncodeHintTypes::AztecLayers => {
                 let Ok(parsed_i32) = value.parse() else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::AztecLayers(parsed_i32));
+                self.0.AztecLayers = Some(parsed_i32);
             }
             EncodeHintTypes::QrVersion => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::QrVersion(value));
+                self.0.QrVersion = Some(value);
             }
             EncodeHintTypes::QrMaskPattern => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::QrMaskPattern(value));
+                self.0.QrMaskPattern = Some(value);
             }
             EncodeHintTypes::QrCompact => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::QrCompact(value));
+                self.0.QrCompact = Some(value);
             }
             EncodeHintTypes::Gs1Format => {
                 let Ok(parsed_bool) = value.parse() else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::Gs1Format(parsed_bool));
+                self.0.Gs1Format = Some(parsed_bool);
             }
             EncodeHintTypes::ForceCodeSet => {
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::ForceCodeSet(value));
+                self.0.ForceCodeSet = Some(value);
             }
             EncodeHintTypes::ForceC40 => {
                 let Ok(parsed_bool) = value.parse() else {
                     return false;
                 };
-                self.0
-                    .insert(hint.into(), rxing::EncodeHintValue::ForceC40(parsed_bool));
+                self.0.ForceC40 = Some(parsed_bool);
             }
             EncodeHintTypes::Code128Compact => {
                 let Ok(code128_compact) = value.parse() else {
                     return false;
                 };
-                self.0.insert(
-                    hint.into(),
-                    rxing::EncodeHintValue::Code128Compact(code128_compact),
-                );
+                self.0.Code128Compact = Some(code128_compact);
             }
             EncodeHintTypes::TelepenAsNumeric => {
                 let Ok(telepen_numeric) = value.parse() else {
                     return false;
                 };
-                self.0.insert(
-                    hint.into(),
-                    rxing::EncodeHintValue::TelepenAsNumeric(telepen_numeric),
-                );
+                self.0.TelepenAsNumeric = Some(telepen_numeric);
             }
         }
         true
@@ -379,22 +485,37 @@ impl EncodeHintDictionary {
 
     #[wasm_bindgen]
     pub fn remove_hint(&mut self, hint: EncodeHintTypes) -> bool {
-        let h: rxing::EncodeHintType = hint.into();
-        if self.0.contains_key(&h) {
-            self.0.remove(&h).is_some()
-        } else {
-            false
+        match hint {
+            EncodeHintTypes::ErrorCorrection => self.0.ErrorCorrection = None,
+            EncodeHintTypes::CharacterSet => self.0.CharacterSet = None,
+            EncodeHintTypes::DataMatrixShape => self.0.DataMatrixShape = None,
+            EncodeHintTypes::DataMatrixCompact => self.0.DataMatrixCompact = None,
+            EncodeHintTypes::MinSize => self.0.MinSize = None,
+            EncodeHintTypes::MaxSize => self.0.MaxSize = None,
+            EncodeHintTypes::MARGIN => self.0.Margin = None,
+            EncodeHintTypes::Pdf417Compact => self.0.Pdf417Compact = None,
+            EncodeHintTypes::Pdf417Compaction => self.0.Pdf417Compaction = None,
+            EncodeHintTypes::Pdf417Dimensions => self.0.Pdf417Dimensions = None,
+            EncodeHintTypes::Pdf417AutoEci => self.0.Pdf417AutoEci = None,
+            EncodeHintTypes::AztecLayers => self.0.AztecLayers = None,
+            EncodeHintTypes::QrVersion => self.0.QrVersion = None,
+            EncodeHintTypes::QrMaskPattern => self.0.QrMaskPattern = None,
+            EncodeHintTypes::QrCompact => self.0.QrCompact = None,
+            EncodeHintTypes::Gs1Format => self.0.Gs1Format = None,
+            EncodeHintTypes::ForceCodeSet => self.0.ForceCodeSet = None,
+            EncodeHintTypes::ForceC40 => self.0.ForceC40 = None,
+            EncodeHintTypes::Code128Compact => self.0.Code128Compact = None,
+            EncodeHintTypes::TelepenAsNumeric => self.0.TelepenAsNumeric = None,
         }
+        true
     }
 }
 
 impl EncodeHintDictionary {
-    pub fn get_dictionary(&self) -> &HashMap<rxing::EncodeHintType, rxing::EncodeHintValue> {
+    pub fn get_dictionary(&self) -> &EncodeHints {
         &self.0
     }
-    pub fn get_dictionary_mut(
-        &mut self,
-    ) -> &mut HashMap<rxing::EncodeHintType, rxing::EncodeHintValue> {
+    pub fn get_dictionary_mut(&mut self) -> &mut EncodeHints {
         &mut self.0
     }
 }

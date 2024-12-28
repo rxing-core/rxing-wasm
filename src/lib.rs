@@ -5,7 +5,7 @@ mod encode_hints;
 use std::collections::HashMap;
 
 use encode_hints::EncodeHintDictionary;
-use rxing::{self, ResultPoint};
+use rxing::{self, DecodeHints, EncodeHints, ResultPoint};
 use rxing::{Reader, Writer};
 use wasm_bindgen::prelude::*;
 
@@ -269,7 +269,7 @@ pub fn encode_barcode(
         &bc_type.into(),
         width as i32,
         height as i32,
-        &std::collections::HashMap::new(),
+        &EncodeHints::default(),
     ) else {
         return Err("couldn't encode".to_owned());
     };
@@ -307,13 +307,10 @@ pub fn decode_barcode(
     try_harder: Option<bool>,
     filter_image: Option<bool>,
 ) -> Result<BarcodeResult, String> {
-    let mut hints: rxing::DecodingHintDictionary = HashMap::new();
-    if let Some(true) = try_harder {
-        hints.insert(
-            rxing::DecodeHintType::TRY_HARDER,
-            rxing::DecodeHintValue::TryHarder(true),
-        );
-    }
+    let mut hints: DecodeHints = DecodeHints {
+        TryHarder: try_harder,
+        ..Default::default()
+    };
 
     let detection_function = if matches!(filter_image, Some(true)) {
         rxing::helpers::detect_in_luma_filtered_with_hints
@@ -386,13 +383,10 @@ pub fn decode_barcode_rgb(
     height: u32,
     try_harder: Option<bool>,
 ) -> Result<BarcodeResult, String> {
-    let mut hints: rxing::DecodingHintDictionary = HashMap::new();
-    if let Some(true) = try_harder {
-        hints.insert(
-            rxing::DecodeHintType::TRY_HARDER,
-            rxing::DecodeHintValue::TryHarder(true),
-        );
-    }
+    let hints: DecodeHints = DecodeHints {
+        TryHarder: try_harder,
+        ..Default::default()
+    };
 
     let mut multi_format_reader = rxing::MultiFormatReader::default();
 
