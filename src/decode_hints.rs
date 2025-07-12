@@ -188,7 +188,7 @@ impl DecodeHintDictionary {
                 .0
                 .NeedResultPointCallback
                 .as_ref()
-                .map(|v| String::from("UNSUPORTED"))
+                .map(|_| String::from("UNSUPORTED NeedResultPointCallback"))
                 .unwrap_or_default(),
             DecodeHintTypes::AllowedEanExtensions => self
                 .0

@@ -62,7 +62,7 @@ pub enum EncodeHintTypes {
      * by format; for example it controls margin before and after the barcode horizontally for
      * most 1D formats. (Type {@link Integer}, or {@link String} representation of the integer value).
      */
-    MARGIN,
+    Margin,
 
     /**
      * Specifies whether to use compact mode for PDF417 (type {@link Boolean}, or "true" or "false"
@@ -166,9 +166,11 @@ impl From<EncodeHintTypes> for rxing::EncodeHintType {
             EncodeHintTypes::CharacterSet => rxing::EncodeHintType::CHARACTER_SET,
             EncodeHintTypes::DataMatrixShape => rxing::EncodeHintType::DATA_MATRIX_SHAPE,
             EncodeHintTypes::DataMatrixCompact => rxing::EncodeHintType::DATA_MATRIX_COMPACT,
+            #[allow(deprecated)]
             EncodeHintTypes::MinSize => rxing::EncodeHintType::MIN_SIZE,
+            #[allow(deprecated)]
             EncodeHintTypes::MaxSize => rxing::EncodeHintType::MAX_SIZE,
-            EncodeHintTypes::MARGIN => rxing::EncodeHintType::MARGIN,
+            EncodeHintTypes::Margin => rxing::EncodeHintType::MARGIN,
             EncodeHintTypes::Pdf417Compact => rxing::EncodeHintType::PDF417_COMPACT,
             EncodeHintTypes::Pdf417Compaction => rxing::EncodeHintType::PDF417_COMPACTION,
             EncodeHintTypes::Pdf417Dimensions => rxing::EncodeHintType::PDF417_DIMENSIONS,
@@ -228,19 +230,21 @@ impl EncodeHintDictionary {
                 .as_ref()
                 .map(|v| v.to_string())
                 .unwrap_or_default(),
+            #[allow(deprecated)]
             EncodeHintTypes::MinSize => self
                 .0
                 .MinSize
                 .as_ref()
                 .map(|v| v.to_string())
                 .unwrap_or_default(),
+            #[allow(deprecated)]
             EncodeHintTypes::MaxSize => self
                 .0
                 .MaxSize
                 .as_ref()
                 .map(|v| v.to_string())
                 .unwrap_or_default(),
-            EncodeHintTypes::MARGIN => self
+            EncodeHintTypes::Margin => self
                 .0
                 .Margin
                 .as_ref()
@@ -406,19 +410,21 @@ impl EncodeHintDictionary {
                 };
                 self.0.DataMatrixCompact = Some(parsed_bool);
             }
+            #[allow(deprecated)]
             EncodeHintTypes::MinSize => {
                 let Some(dim) = parse_dimension(&value) else {
                     return false;
                 };
                 self.0.MinSize = Some(dim);
             }
+            #[allow(deprecated)]
             EncodeHintTypes::MaxSize => {
                 let Some(dim) = parse_dimension(&value) else {
                     return false;
                 };
                 self.0.MaxSize = Some(dim);
             }
-            EncodeHintTypes::MARGIN => {
+            EncodeHintTypes::Margin => {
                 self.0.Margin = Some(value);
             }
             EncodeHintTypes::Pdf417Compact => {
@@ -489,9 +495,11 @@ impl EncodeHintDictionary {
             EncodeHintTypes::CharacterSet => self.0.CharacterSet = None,
             EncodeHintTypes::DataMatrixShape => self.0.DataMatrixShape = None,
             EncodeHintTypes::DataMatrixCompact => self.0.DataMatrixCompact = None,
+            #[allow(deprecated)]
             EncodeHintTypes::MinSize => self.0.MinSize = None,
+            #[allow(deprecated)]
             EncodeHintTypes::MaxSize => self.0.MaxSize = None,
-            EncodeHintTypes::MARGIN => self.0.Margin = None,
+            EncodeHintTypes::Margin => self.0.Margin = None,
             EncodeHintTypes::Pdf417Compact => self.0.Pdf417Compact = None,
             EncodeHintTypes::Pdf417Compaction => self.0.Pdf417Compaction = None,
             EncodeHintTypes::Pdf417Dimensions => self.0.Pdf417Dimensions = None,
@@ -527,9 +535,7 @@ fn parse_dimension(dim: &str) -> Option<rxing::Dimension> {
         return None;
     }
 
-    let Some(x_pos) = dim.find("x") else {
-        return None;
-    };
+    let x_pos = dim.find("x")?;
 
     let p1 = &dim[..x_pos];
     let p2 = &dim[x_pos + 1..];
@@ -557,15 +563,9 @@ fn parse_dimensions(dim: &str) -> Option<rxing::pdf417::encoder::Dimensions> {
     if !dim.contains("||") {
         return None;
     }
-    let Some(split) = dim.find("||") else {
-        return None;
-    };
-    let Some((min_cols, max_cols)) = parse_dimensions_sub_part(&dim[..split]) else {
-        return None;
-    };
-    let Some((min_rows, max_rows)) = parse_dimensions_sub_part(&dim[split + 1..]) else {
-        return None;
-    };
+    let split = dim.find("||")?;
+    let (min_cols, max_cols) = parse_dimensions_sub_part(&dim[..split])?;
+    let (min_rows, max_rows) = parse_dimensions_sub_part(&dim[split + 1..])?;
 
     Some(rxing::pdf417::encoder::Dimensions::new(
         min_cols, max_cols, min_rows, max_rows,
@@ -579,9 +579,7 @@ fn parse_dimensions_sub_part(part: &str) -> Option<(usize, usize)> {
     if !part.contains("/") {
         return None;
     }
-    let Some(split) = part.find("/") else {
-        return None;
-    };
+    let split = part.find("/")?;
     let p1 = &part[..split];
     let p2 = &part[split + 1..];
 

@@ -70,7 +70,7 @@ pub enum BarcodeFormat {
 
     RectangularMicroQR,
 
-    ///
+    /// Format not supported by the library.
     UnsuportedFormat,
 }
 
@@ -242,7 +242,7 @@ impl From<rxing::RXingResult> for BarcodeResult {
             result_points: value
                 .getRXingResultPoints()
                 .iter()
-                .flat_map(|rxp| [rxp.getX(), rxp.getY()])
+                .flat_map(|rxp| [rxp.get_x(), rxp.get_y()])
                 .collect(),
             format: value.getBarcodeFormat().to_owned().into(),
             result_metadata: value
