@@ -23,6 +23,6 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "rxing-wasm": "^0.5.0"
+    "rxing-wasm": "^0.5.1"
   }
 }
