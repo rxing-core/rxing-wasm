@@ -6,7 +6,7 @@
   "license": "Apache 2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rxing-core/rxing-wasm"
+    "url": "git+https://github.com/rxing-core/rxing-wasm.git"
   },
   "files": [
     "rxing_wasm_bg.wasm",
