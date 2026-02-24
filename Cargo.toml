@@ -1,7 +1,7 @@
 [package]
 name = "rxing-wasm"
-version = "0.5.4"
-edition = "2021"
+version = "0.5.5"
+edition = "2024"
 description = "wasm bindings for rxing to provide commong barcode operations (decode/encode)"
 repository = "https://github.com/rxing-core/rxing-wasm"
 keywords = ["barcode", "2d_barcode", "1d_barcode", "barcode_reader", "barcode_writer", "rxing"]
@@ -16,9 +16,9 @@ decode_hints = []
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wasm-bindgen = "0.2.106"
-js-sys = "0.3.83"
-web-sys = {version =  "0.3.83", features = ["CanvasRenderingContext2d", "HtmlCanvasElement", "ImageData"]}
+wasm-bindgen = "0.2.112"
+js-sys = "0.3.89"
+web-sys = {version =  "0.3.89", features = ["CanvasRenderingContext2d", "HtmlCanvasElement", "ImageData"]}
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -26,11 +26,11 @@ web-sys = {version =  "0.3.83", features = ["CanvasRenderingContext2d", "HtmlCan
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.7", optional = true }
 
-rxing = {version = "~0.8.3", default-features = false, features = ["wasm_support"]}
+rxing = {version = "~0.8.5", default-features = false, features = ["wasm_support"]}
 #rxing = {path="../rxing", version = "~0.2.23", default-features = false, features = ["wasm_support"]}
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.56"
+wasm-bindgen-test = "0.3.62"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
