@@ -26,7 +26,7 @@ web-sys = {version =  "0.3.89", features = ["CanvasRenderingContext2d", "HtmlCan
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.7", optional = true }
 
-rxing = {version = "~0.8.5", default-features = false, features = ["wasm_support"]}
+rxing = {version = "~0.8.5", default-features = false, features = ["wasm_support","encoding_rs"]}
 #rxing = {path="../rxing", version = "~0.2.23", default-features = false, features = ["wasm_support"]}
 
 [dev-dependencies]
