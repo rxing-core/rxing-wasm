@@ -396,7 +396,7 @@ pub fn decode_barcode_rgb(
                 width as usize,
                 height as usize,
                 &data,
-            ),
+            ).map_err(|e| e.to_string())?,
         )),
         &hints,
     ) else {
@@ -462,7 +462,7 @@ pub fn decode_multi(
         reader.decode_multiple_with_hints(
             &mut BinaryBitmap::new(HybridBinarizer::new(Luma8LuminanceSource::new(
                 data, width, height,
-            ))),
+            ).map_err(|e| e.to_string())?)),
             hints.get_dictionary_mut(),
         )
     } else {

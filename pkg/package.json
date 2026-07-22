@@ -2,7 +2,7 @@
   "name": "rxing-wasm",
   "type": "module",
   "description": "wasm bindings for rxing to provide commong barcode operations (decode/encode)",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "license": "Apache 2.0",
   "repository": {
     "type": "git",
