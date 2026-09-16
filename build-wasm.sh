@@ -7,7 +7,7 @@ cargo build --release --target wasm32-unknown-unknown
 echo "Generating bindings..."
 wasm-bindgen ./target/wasm32-unknown-unknown/release/rxing_wasm.wasm --out-dir ./pkg --out-name rxing_wasm
 echo "Optimizing wasm..."
-wasm-opt pkg/rxing_wasm_bg.wasm -o pkg/rxing_wasm_bg-opt.wasm --new-wat-parser --enable-nontrapping-float-to-int --enable-bulk-memory --vacuum --strip-debug --strip-producers --inlining-optimizing --optimize-casts --alignment-lowering --global-refining --gufa-optimizing --dce -Oz -O4
+wasm-opt pkg/rxing_wasm_bg.wasm -o pkg/rxing_wasm_bg-opt.wasm --enable-nontrapping-float-to-int --enable-bulk-memory --vacuum --strip-debug --strip-producers --inlining-optimizing --optimize-casts --alignment-lowering --global-refining --gufa-optimizing --dce -Oz -O4
 echo "Finalizing..."
 mv pkg/rxing_wasm_bg-opt.wasm pkg/rxing_wasm_bg.wasm
 cp ./LICENSE ./pkg/LICENSE
